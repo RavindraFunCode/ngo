@@ -1,10 +1,10 @@
-# [NGO Name]
+# [Jai Shree Ram Foundation]
 
-![[NGO Name] Logo](path/to/logo.png)
+![Jai Shree Ram Foundation Logo](path/to/logo.png)
 
 ## About Us
 
-[NGO Name] is a non-governmental organization dedicated to [brief description of main purpose/cause]. Established in [Year], we have been working tirelessly to [main goal/impact].
+Jai Shree Ram Foundation is a non-governmental organization dedicated to [brief description of main purpose/cause]. Established in [Year], we have been working tirelessly to [main goal/impact].
 
 ## Mission & Vision
 
