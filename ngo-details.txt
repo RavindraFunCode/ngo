@@ -1,0 +1,50 @@
+Website Features:
+
+1. Core Pages (The Foundation)
+    Home/Landing Page: A high-impact Hero section with a clear mission statement, emotional imagery/video, and a "Donate" call-to-action (CTA).
+    About Us: Mission & Vision: What drives the NGO.
+    Our Story: How it started.
+    Team/Board Members: Photos and bios to build trust.
+    Financials/Transparency: Annual reports or simple breakdowns of where money goes (crucial for donor trust).
+    Contact Us: Physical address, map, email, phone, and a contact form.
+2. Action & Engagement (The "Engine")
+    Donation System:
+    Secure payment gateway integration (Stripe, PayPal, Razorpay, etc.).
+    Options for One-time vs. Monthly giving.
+    "Sponsor a Child/Project" specific options.
+    Volunteer Hub:
+    Information on how to help.
+    Application form for volunteers.
+    Get Involved: Corporate partnerships, fundraising ideas for supporters.
+3. Impact & Content (The "Proof")
+    Projects/Causes: Detailed pages for each major initiative (e.g., "Clean Water," "Education").
+    Success Stories/Blog: Real stories of people helped. Updates on projects.
+    Gallery: High-quality photos and videos of the work on the ground.
+    Events Calendar: Upcoming fundraisers, webinars, or field visits.
+4. Technical & Trust Features
+    Newsletter Signup: To keep supporters engaged.
+    Social Media Integration: Links to Instagram, LinkedIn, Twitter, etc.
+    SEO Optimization: To help people find the cause.
+    Mobile Responsiveness: Critical since most people browse on phones.
+
+
+========= ============== ======== ========= ======== ========= 
+Proposed Admin Dashboard Features:
+
+
+Dashboard Overview (Home)
+    Quick Stats: Total donations this month, new volunteers, active projects.
+    Recent Activity: List of recent donations or form submissions.
+Content Management (CMS)
+    Manage Projects/Causes: Add new causes, update progress bars, upload photos, edit descriptions.
+    Manage Events: Create and edit upcoming events.
+Manage Blog/Stories: Publish success stories and news.
+Donation Management
+    Transaction History: View all donations (date, amount, donor name).
+    Export Data: Download donor lists for tax receipts or newsletters (CSV/Excel).
+Volunteer & User Management
+    Volunteer Applications: View and approve/reject volunteer signups.
+    Admin Users: Add other team members who can manage the dashboard.
+Settings
+    General Info: Update NGO address, phone, email, and social links.
+    Payment Settings: Configure API keys for Stripe/PayPal.

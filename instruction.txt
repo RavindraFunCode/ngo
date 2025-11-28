@@ -1,0 +1,341 @@
+ROLE  
+You are an expert PHP–Laravel developer and solution architect.  
+Your task is to design and implement a fully manageable NGO website where **everything** is controlled from an **Admin Dashboard**:  
+- pages & content  
+- theme (colors, logo, fonts, layout sections)  
+- languages (multi-language support)  
+- donation/payment settings  
+- forms (contact, volunteer, etc.)  
+- menus & footer links  
+- email templates & notifications  
+
+The frontend is HTML + CSS + Bootstrap, using Laravel Blade templates.
+
+--------------------------------------------------
+1. PROJECT OVERVIEW
+--------------------------------------------------
+Build a modular NGO website platform with:
+
+Public site examples:
+- Home
+- About Us
+- Our Work / Projects / Programs
+- Campaigns / Causes (accept donation)
+- Get Involved (Volunteer, Partner)
+- Blog / News
+- Contact Us
+- FAQ / Policies / Terms / Privacy
+
+Admin panel:
+- Single unified dashboard to control **all** visible content and site behavior.
+- No hard-coded text or colors in the frontend views; everything important should be editable from admin or config.
+
+The code must be clean, well-structured, and ready for future features.
+
+--------------------------------------------------
+2. TECH STACK & STANDARDS
+--------------------------------------------------
+- Backend: PHP (8.2+), Laravel (latest stable)
+- Frontend: HTML5, CSS3, Bootstrap 5.x, minimal JS (vanilla + optional jQuery if needed)
+- Views: Blade templates
+- DB: MySQL/MariaDB
+- Auth: Laravel Breeze or Laravel UI (email/password auth)
+- Roles: Use Laravel built-in Gates/Policies OR spatie/laravel-permission package (recommended)
+  - Roles: super_admin, admin, content_manager, finance, viewer
+
+Coding standards:
+- Use PSR-12 coding style.
+- Use Service classes or Action classes for business logic; keep Controllers thin.
+- Use Request classes for validation.
+- Use resourceful Controllers and route model binding wherever possible.
+- Configurable items must be stored in DB, cached, and loaded via a dedicated Settings service.
+
+--------------------------------------------------
+3. CORE MODULES (OVERVIEW)
+--------------------------------------------------
+Build the following modules:
+
+3.1. Auth & Roles
+- User registration disabled on frontend (only admins created from backend or seeder).
+- Login, logout, forgot password.
+- Role-based access control for admin features.
+
+3.2. Admin Dashboard (Main Hub)
+- At-a-glance widgets:
+  - Total donations (overall & current month)
+  - Active campaigns/causes
+  - New volunteers this week
+  - Recent contact form submissions
+- Quick links: “Manage Pages”, “Manage Campaigns”, “Theme Settings”, “Language Manager”.
+
+3.3. Content Management (CMS)
+- Page types:
+  - Static pages (About, Mission, Vision, Team, FAQ, etc.)
+  - Dynamic sections (Home page blocks, sliders, stats, partner logos)
+- Features:
+  - WYSIWYG editor (e.g., TinyMCE / CKEditor) for page content.
+  - Support SEO fields per page (meta title, meta description, meta keywords, slug).
+  - Versioning or at least last-updated info for each page.
+- Routing:
+  - Pages resolved by slug (`/about-us`, `/our-work`, etc.)
+  - Slugs translatable per language.
+
+3.4. Campaigns / Causes & Donations
+- Campaign entity:
+  - title, short_description, full_description
+  - target_amount, raised_amount (calculated from donations)
+  - start_date, end_date, status (draft, published, archived)
+  - featured_image, gallery (optional)
+- Donation flow:
+  - Public user selects campaign (or general donation).
+  - Choose amount (preset + custom).
+  - Fill donor info form (name, email, phone, address, optional message).
+  - Choose a payment method (controlled via admin).
+  - Redirect to payment gateway (Razorpay/Stripe/PayPal or any configured gateway).
+  - Handle success/cancel webhooks/callbacks.
+- Donations table:
+  - id, campaign_id (nullable for general donation), user_id (nullable), amount, currency, status (pending, paid, failed, refunded), payment_gateway, transaction_id, payment_details (JSON), donor_name, donor_email, donor_phone, created_at, updated_at.
+- Admin:
+  - View donations list with filters (date range, campaign, status).
+  - Export donations as CSV/Excel.
+  - Manual add/edit for offline donations (cash, bank transfer).
+
+3.5. Multi-Language System
+Goal: Admin can add languages and manage translations without touching code.
+
+- Language settings table:
+  - code (e.g. "en", "hi"), name, is_default, is_active.
+- Frontend:
+  - Language switcher in header.
+  - Store selected language in session/cookie.
+- Content translation:
+  For dynamic content:
+  - Option 1 (simple): Use translation tables per module, e.g. pages + page_translations, campaigns + campaign_translations.
+  - Option 2 (generic): translation table: translatable_type, translatable_id, locale, field, value (flexible but more complex).
+  Implementation choice:  
+  - Prefer Option 1 for clarity (page_translations, campaign_translations, menu_translations, etc.).
+- Static strings:
+  - Use Laravel lang files (`resources/lang/{locale}/...php`) for labels/buttons.
+- Admin:
+  - “Language Manager” to:
+    - Add/disable languages.
+    - Set default language.
+    - For each content, show tabs for each language.
+
+3.6. Theme & Layout Customization
+All common UI elements must be configurable from Admin.
+
+Theme settings table fields (example):
+- primary_color, secondary_color, accent_color
+- header_bg_color, footer_bg_color, text_color
+- logo (main), logo_light, favicon
+- font_family (store selected from allowed list)
+- home_layout_type (e.g., default, minimal, hero_big_banner)
+- social_links (JSON: facebook, twitter, instagram, youtube, linkedin)
+- show_donation_button_in_header (boolean)
+
+Admin UI:
+- Color pickers for theme colors.
+- Upload fields for logo and favicon.
+- Dropdown for font selection (e.g., "Poppins", "Montserrat", "Roboto").
+- Toggles for showing/hiding sections (e.g., home page slider, stats section, testimonials).
+Apply theme:
+- A central ThemeService that fetches settings and shares them to all views via a View Composer or a Service Provider (`view()->share(...)`).
+
+3.7. Navigation Menus & Footer Manager
+- Tables:
+  - menus (id, name, identifier: "main_menu", "footer_menu_1", ...).
+  - menu_items (id, menu_id, parent_id, title, url, type [internal_page, external_link, route], target, sort_order).
+  - menu_item_translations for multilingual titles.
+- Admin:
+  - Drag-and-drop interface for ordering menu items (if possible).
+  - Add/edit/delete menu items.
+- Frontend:
+  - Dynamic menu rendering by identifier.
+  - Support nested menu (submenu) via parent_id.
+
+3.8. Forms: Contact & Volunteer & Custom Forms
+- Contact form:
+  - Fields: name, email, phone, subject, message.
+  - Store submissions to DB + send email notification to Admin.
+- Volunteer form:
+  - Fields: name, email, phone, address, interest_areas (multi-select), experience, availability, notes.
+  - Store to DB; Admin can mark status (new, in-review, approved, rejected).
+- Form configuration:
+  - Email recipients configurable from admin (e.g., "all contact messages go to xyz@ngo.org").
+- Optional generic forms:
+  - Configurable custom forms with dynamic fields (phase-2).
+
+3.9. Blog / News Module
+- Posts table:
+  - title, slug, excerpt, content, featured_image, status, published_at, author_id.
+- Categories & tags (optional but recommended).
+- SEO fields per post.
+- Admin:
+  - CRUD for posts.
+  - Schedule publish by setting published_at.
+- Frontend:
+  - Listing, single post, category/tag filter.
+
+3.10. Media Library
+- Unified media table or use Laravel’s filesystem:
+  - Optionally store metadata: file_name, path, type, size, uploaded_by, used_in (JSON).
+- Admin:
+  - Simple media manager to upload images/documents and reuse them (hero banners, program images, etc.).
+
+3.11. Settings & Configuration Module
+Centralized Settings categories:
+- General Settings:
+  - NGO name, tagline, address, contact email/phone, default country, time zone, Google Maps URL, etc.
+- Contact Settings:
+  - default contact email(s), BCC emails.
+- Payment Settings:
+  - multiple gateways (Stripe/Razorpay/PayPal or similar).
+  - keys, test/live mode, minimum donation amount, currency.
+- Email Settings:
+  - From name, from email.
+  - SMTP settings if needed (if not using .env).
+- Social & SEO Settings:
+  - global meta tags, social share image.
+
+Implementation:
+- Generic settings table:
+  - key, value, group, type (string, boolean, json).
+- SettingsService:
+  - get(key, default), set(key, value), cached queries.
+
+3.12. Email Templates & Notifications
+- Types:
+  - Donation receipt to donor.
+  - New donation alert to admin.
+  - New volunteer sign-up to admin.
+  - Contact form submission to admin.
+- Admin:
+  - Manage email templates with placeholders:
+    - Example placeholders: {{donor_name}}, {{amount}}, {{campaign_title}}, {{site_name}}, {{donation_date}}.
+  - Test send feature for each template (send to a test email address).
+- Use Laravel Notifications / Mailables.
+
+3.13. Analytics & Logs (Basic)
+- Basic analytics:
+  - Count of visitors per day (simple table or integrate Google Analytics).
+  - Show key metrics on admin dashboard.
+- Activity log (optional but recommended):
+  - Record admin actions: logged-in user, action type, model, before/after snapshot.
+  - View logs in admin with filters.
+
+--------------------------------------------------
+4. ARCHITECTURE & FOLDER STRUCTURE
+--------------------------------------------------
+- Use modular organization where possible:
+  - app/Http/Controllers/Admin/...
+  - app/Http/Controllers/Web/...
+  - app/Services/ (SettingsService, DonationService, CampaignService, ThemeService, MailTemplateService)
+  - app/Models/ (Page, PageTranslation, Campaign, Donation, Volunteer, Menu, MenuItem, etc.)
+  - app/View/Components/ for reusable frontend blocks (hero banner, stats, campaign card).
+- Routes:
+  - routes/web.php for public routes.
+  - routes/admin.php for admin routes (prefixed with /admin, middleware auth & role).
+- Use Form Requests for input validation.
+
+--------------------------------------------------
+5. SECURITY & PERFORMANCE REQUIREMENTS
+--------------------------------------------------
+Security:
+- CSRF protection on all forms.
+- Validate and sanitize inputs at controller/request level.
+- Rate limit public forms (contact, donation, volunteer) to avoid spam.
+- Store payment gateway secrets in .env (not database).
+- Ensure only authorized roles can access admin routes and specific features.
+
+Performance:
+- Use caching for:
+  - Settings data.
+  - Menus.
+  - Home page sections (blocks) where possible.
+- Optimize media (image compression, size limits).
+- Use pagination for lists (donations, campaigns, posts, submissions).
+
+--------------------------------------------------
+6. DEVELOPMENT WORKFLOW & DELIVERABLES
+--------------------------------------------------
+For each module:
+1) Design DB schema (migrations) and relationships.
+2) Create Models + Factories + Seeders where needed.
+3) Implement Admin CRUD (controllers, views, validations).
+4) Implement Public views (Blade templates with Bootstrap).
+5) Wire up Settings and Theme so that UI reflects database configs.
+6) Add proper authorization checks (policies or middleware).
+7) Write at least basic feature tests for critical flows:
+   - Donation flow
+   - Language switching
+   - Updating theme settings
+   - Creating page and viewing it on frontend
+
+Deliverables:
+- Complete Laravel project (clean folder structure).
+- SQL migrations & seeders for default data (one default admin user, default language, sample pages).
+- Basic documentation:
+  - How to install and configure.
+  - How to manage content, theme, payments, languages.
+  - How to add a new language.
+  - How to add a new gateway (high-level steps).
+
+--------------------------------------------------
+7. UX/UI GUIDELINES (BOOTSTRAP + BLADE)
+--------------------------------------------------
+- Use Bootstrap 5 grid and components.
+- Mobile-first responsive design.
+- Keep design clean, NGO-style:
+  - Big hero section on home page (headline + CTA “Donate Now” & “Become a Volunteer”).
+  - Highlight impact stats (e.g., children helped, meals served).
+  - Show key campaigns and success stories on home.
+- Use theme colors from settings; no hard-coded colors in CSS except fallback.
+- Use Blade layouts:
+  - layouts/app.blade.php for frontend
+  - layouts/admin.blade.php for backend
+- Break views into partials:
+  - partials/header.blade.php
+  - partials/footer.blade.php
+  - partials/alerts.blade.php
+  - components for cards, campaign listings.
+
+--------------------------------------------------
+8. EXTENSIBILITY (FUTURE FEATURES)
+--------------------------------------------------
+Design with extension in mind:
+- Membership / recurring donors
+- Event management (workshops, fundraisers)
+- Automatic receipts & 80G / tax certificates (country-specific)
+- API endpoints for mobile apps
+- Integration with WhatsApp / SMS for donor notifications
+
+Write code in a way that adding new modules (Events, Gallery, etc.) reuses the same patterns:
+- model + translations
+- admin CRUD
+- frontend listing + single view
+- SEO + menu integration
+
+--------------------------------------------------
+9. ACCEPTANCE CRITERIA (SUMMARY)
+--------------------------------------------------
+The build is considered successful if:
+
+- Admin can:
+  - Change theme colors, logo, fonts from dashboard and changes reflect on frontend.
+  - Manage languages (add, disable, switch default).
+  - Create/update/delete pages and content for each language.
+  - Create/manage campaigns and see donations.
+  - Configure at least one payment gateway and receive test donations.
+  - Manage menus and footer links without touching code.
+  - See basic analytics (donations summary, visitors count if implemented).
+  - View and export donation/volunteer/contact data.
+
+- Public visitor can:
+  - Browse pages and campaigns in multiple languages.
+  - Switch language from frontend.
+  - Make a donation smoothly and receive confirmation email.
+  - Submit contact and volunteer forms.
+  - Browse blog/news.
+
+All these without modifying code for day-to-day operations; everything controlled from Admin Dashboard.
