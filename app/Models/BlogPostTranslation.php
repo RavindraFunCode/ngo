@@ -13,8 +13,9 @@ class BlogPostTranslation extends Model
 
     protected $fillable = [
         'post_id',
-        'locale',
+        'language_id',
         'title',
+        'slug',
         'content',
         'excerpt',
         'meta_title',
@@ -25,5 +26,10 @@ class BlogPostTranslation extends Model
     public function post()
     {
         return $this->belongsTo(BlogPost::class, 'post_id');
+    }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
     }
 }

@@ -29,27 +29,39 @@ class BlogController extends Controller
         $request->validate([
             'slug' => 'required|unique:posts,slug',
             'category_id' => 'required|exists:post_categories,id',
-            'image' => 'nullable|image|max:2048',
+            'featured_image' => 'nullable|image|max:2048',
+            'status' => 'required|in:draft,published',
+            'translations' => 'required|array',
+            'translations.*.title' => 'required|string|max:255',
+            'translations.*.slug' => 'required|string|max:255',
+            'translations.*.content' => 'required|string',
         ]);
 
         $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('blog', 'public');
+        if ($request->hasFile('featured_image')) {
+            $imagePath = $request->file('featured_image')->store('blog', 'public');
         }
 
         $post = BlogPost::create([
             'slug' => Str::slug($request->slug),
             'category_id' => $request->category_id,
-            'is_active' => $request->has('is_active'),
+            'status' => $request->status,
             'published_at' => $request->published_at,
             'author_id' => auth()->id(),
-            'image' => $imagePath,
+            'featured_image' => $imagePath,
         ]);
 
+        $languages = Language::whereIn('code', array_keys($request->translations))->get()->keyBy('code');
+
         foreach ($request->translations as $locale => $data) {
+            if (! $languages->has($locale)) {
+                continue;
+            }
+
             $post->translations()->create([
-                'locale' => $locale,
+                'language_id' => $languages[$locale]->id,
                 'title' => $data['title'],
+                'slug' => Str::slug($data['slug']),
                 'content' => $data['content'],
                 'excerpt' => $data['excerpt'] ?? null,
                 'meta_title' => $data['meta_title'] ?? null,
@@ -73,25 +85,37 @@ class BlogController extends Controller
         $request->validate([
             'slug' => 'required|unique:posts,slug,' . $blog->id,
             'category_id' => 'required|exists:post_categories,id',
-            'image' => 'nullable|image|max:2048',
+            'featured_image' => 'nullable|image|max:2048',
+            'status' => 'required|in:draft,published',
+            'translations' => 'required|array',
+            'translations.*.title' => 'required|string|max:255',
+            'translations.*.slug' => 'required|string|max:255',
+            'translations.*.content' => 'required|string',
         ]);
 
-        if ($request->hasFile('image')) {
-            $blog->image = $request->file('image')->store('blog', 'public');
+        if ($request->hasFile('featured_image')) {
+            $blog->featured_image = $request->file('featured_image')->store('blog', 'public');
         }
 
         $blog->update([
             'slug' => Str::slug($request->slug),
             'category_id' => $request->category_id,
-            'is_active' => $request->has('is_active'),
+            'status' => $request->status,
             'published_at' => $request->published_at,
         ]);
 
+        $languages = Language::whereIn('code', array_keys($request->translations))->get()->keyBy('code');
+
         foreach ($request->translations as $locale => $data) {
+            if (! $languages->has($locale)) {
+                continue;
+            }
+
             $blog->translations()->updateOrCreate(
-                ['locale' => $locale],
+                ['language_id' => $languages[$locale]->id],
                 [
                     'title' => $data['title'],
+                    'slug' => Str::slug($data['slug']),
                     'content' => $data['content'],
                     'excerpt' => $data['excerpt'] ?? null,
                     'meta_title' => $data['meta_title'] ?? null,

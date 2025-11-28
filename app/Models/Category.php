@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Language;
 
 class Category extends Model
 {
@@ -20,7 +21,13 @@ class Category extends Model
 
     public function getTranslation($locale)
     {
-        return $this->translations->where('locale', $locale)->first();
+        $languageId = Language::where('code', $locale)->value('id');
+
+        if (! $languageId) {
+            return null;
+        }
+
+        return $this->translations->where('language_id', $languageId)->first();
     }
 
     public function posts()

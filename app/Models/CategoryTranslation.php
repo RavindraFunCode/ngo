@@ -11,10 +11,15 @@ class CategoryTranslation extends Model
 
     protected $table = 'post_category_translations';
 
-    protected $fillable = ['category_id', 'locale', 'name', 'description'];
+    protected $fillable = ['category_id', 'language_id', 'name', 'slug', 'description'];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
     }
 }

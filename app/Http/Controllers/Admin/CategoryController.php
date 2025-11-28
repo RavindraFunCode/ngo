@@ -27,6 +27,9 @@ class CategoryController extends Controller
         $request->validate([
             'slug' => 'required|unique:post_categories,slug',
             'is_active' => 'boolean',
+            'translations' => 'required|array',
+            'translations.*.name' => 'required|string|max:255',
+            'translations.*.slug' => 'required|string|max:255',
         ]);
 
         $category = Category::create([
@@ -34,15 +37,22 @@ class CategoryController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
 
+        $languages = Language::whereIn('code', array_keys($request->translations))->get()->keyBy('code');
+
         foreach ($request->translations as $locale => $data) {
+            if (! $languages->has($locale)) {
+                continue;
+            }
+
             $category->translations()->create([
-                'locale' => $locale,
+                'language_id' => $languages[$locale]->id,
                 'name' => $data['name'],
+                'slug' => Str::slug($data['slug']),
                 'description' => $data['description'] ?? null,
             ]);
         }
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
+        return redirect()->route('admin.blog.categories.index')->with('success', 'Category created successfully.');
     }
 
     public function edit(Category $category)
@@ -56,6 +66,9 @@ class CategoryController extends Controller
         $request->validate([
             'slug' => 'required|unique:post_categories,slug,' . $category->id,
             'is_active' => 'boolean',
+            'translations' => 'required|array',
+            'translations.*.name' => 'required|string|max:255',
+            'translations.*.slug' => 'required|string|max:255',
         ]);
 
         $category->update([
@@ -63,23 +76,29 @@ class CategoryController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
 
+        $languages = Language::whereIn('code', array_keys($request->translations))->get()->keyBy('code');
+
         foreach ($request->translations as $locale => $data) {
-            $category->translations()->updateOrCreate(
-                ['locale' => $locale],
-                [
-                    'name' => $data['name'],
-                    'description' => $data['description'] ?? null,
-                ]
-            );
+            if (! $languages->has($locale)) {
+                continue;
+            }
+
+            $category->translations()->updateOrCreate([
+                'language_id' => $languages[$locale]->id,
+            ], [
+                'name' => $data['name'],
+                'slug' => Str::slug($data['slug']),
+                'description' => $data['description'] ?? null,
+            ]);
         }
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
+        return redirect()->route('admin.blog.categories.index')->with('success', 'Category updated successfully.');
     }
 
     public function destroy(Category $category)
     {
         $category->translations()->delete();
         $category->delete();
-        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
+        return redirect()->route('admin.blog.categories.index')->with('success', 'Category deleted successfully.');
     }
 }

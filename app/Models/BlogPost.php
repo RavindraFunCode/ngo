@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Language;
 
 class BlogPost extends Model
 {
@@ -11,7 +12,7 @@ class BlogPost extends Model
 
     protected $table = 'posts';
 
-    protected $fillable = ['category_id', 'slug', 'is_active', 'published_at', 'author_id', 'image'];
+    protected $fillable = ['category_id', 'slug', 'status', 'published_at', 'author_id', 'featured_image'];
 
     protected $casts = [
         'published_at' => 'datetime',
@@ -24,7 +25,13 @@ class BlogPost extends Model
 
     public function getTranslation($locale)
     {
-        return $this->translations->where('locale', $locale)->first();
+        $languageId = Language::where('code', $locale)->value('id');
+
+        if (! $languageId) {
+            return null;
+        }
+
+        return $this->translations->where('language_id', $languageId)->first();
     }
 
     public function category()
