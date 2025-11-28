@@ -10,7 +10,7 @@
                 <h4 class="card-title">Add Category</h4>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.categories.store') }}" method="POST">
+                <form action="{{ route('admin.blog.categories.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="slug" class="form-label">Slug</label>
@@ -40,6 +40,10 @@
                                 <input type="text" class="form-control" name="translations[{{ $language->code }}][name]">
                             </div>
                             <div class="mb-3">
+                                <label class="form-label">Slug</label>
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][slug]">
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label">Description</label>
                                 <textarea class="form-control" name="translations[{{ $language->code }}][description]"></textarea>
                             </div>
@@ -48,7 +52,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-3">Save Category</button>
-                    <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary mt-3">Cancel</a>
+                    <a href="{{ route('admin.blog.categories.index') }}" class="btn btn-secondary mt-3">Cancel</a>
                 </form>
             </div>
         </div>

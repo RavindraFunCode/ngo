@@ -32,13 +32,16 @@
                             <input type="datetime-local" class="form-control" id="published_at" name="published_at">
                         </div>
                         <div class="col-md-6">
-                            <label for="image" class="form-label">Featured Image</label>
-                            <input type="file" class="form-control" id="image" name="image">
+                            <label for="featured_image" class="form-label">Featured Image</label>
+                            <input type="file" class="form-control" id="featured_image" name="featured_image">
                         </div>
                     </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active" checked>
-                        <label class="form-check-label" for="is_active">Is Active</label>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                        </select>
                     </div>
 
                     <!-- Language Tabs -->
@@ -58,6 +61,10 @@
                             <div class="mb-3">
                                 <label class="form-label">Title</label>
                                 <input type="text" class="form-control" name="translations[{{ $language->code }}][title]">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Slug</label>
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][slug]">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Excerpt</label>

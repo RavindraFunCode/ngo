@@ -35,16 +35,19 @@
                             <input type="datetime-local" class="form-control" id="published_at" name="published_at" value="{{ $blog->published_at ? $blog->published_at->format('Y-m-d\TH:i') : '' }}">
                         </div>
                         <div class="col-md-6">
-                            <label for="image" class="form-label">Featured Image</label>
-                            <input type="file" class="form-control" id="image" name="image">
-                            @if($blog->image)
-                                <img src="{{ Storage::url($blog->image) }}" alt="Current Image" class="mt-2" style="height: 100px;">
+                            <label for="featured_image" class="form-label">Featured Image</label>
+                            <input type="file" class="form-control" id="featured_image" name="featured_image">
+                            @if($blog->featured_image)
+                                <img src="{{ Storage::url($blog->featured_image) }}" alt="Current Image" class="mt-2" style="height: 100px;">
                             @endif
                         </div>
                     </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active" {{ $blog->is_active ? 'checked' : '' }}>
-                        <label class="form-check-label" for="is_active">Is Active</label>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="draft" {{ $blog->status === 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="published" {{ $blog->status === 'published' ? 'selected' : '' }}>Published</option>
+                        </select>
                     </div>
 
                     <!-- Language Tabs -->
@@ -67,6 +70,10 @@
                             <div class="mb-3">
                                 <label class="form-label">Title</label>
                                 <input type="text" class="form-control" name="translations[{{ $language->code }}][title]" value="{{ $translation->title ?? '' }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Slug</label>
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][slug]" value="{{ $translation->slug ?? '' }}">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Excerpt</label>

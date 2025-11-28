@@ -14,7 +14,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
     Route::post('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
     Route::resource('media', \App\Http\Controllers\Admin\MediaController::class)->only(['index', 'store', 'destroy']);
-    Route::resource('media', \App\Http\Controllers\Admin\MediaController::class)->only(['index', 'store', 'destroy']);
     Route::resource('pages', \App\Http\Controllers\Admin\PageController::class);
     Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class);
     Route::get('menus/{menu}/builder', [\App\Http\Controllers\Admin\MenuController::class, 'builder'])->name('menus.builder');
