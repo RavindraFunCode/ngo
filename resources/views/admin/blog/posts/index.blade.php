@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="card-title">Blog Posts</h4>
-                <a href="{{ route('admin.blog.create') }}" class="btn btn-primary">Add Post</a>
+                <a href="{{ route('admin.blog.posts.create') }}" class="btn btn-primary">Add Post</a>
             </div>
             <div class="card-body">
                 @if(session('success'))
@@ -42,8 +42,8 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.blog.edit', $post) }}" class="btn btn-sm btn-info">Edit</a>
-                                    <form action="{{ route('admin.blog.destroy', $post) }}" method="POST" class="d-inline">
+                                    <a href="{{ route('admin.blog.posts.edit', $post) }}" class="btn btn-sm btn-info">Edit</a>
+                                    <form action="{{ route('admin.blog.posts.destroy', $post) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>

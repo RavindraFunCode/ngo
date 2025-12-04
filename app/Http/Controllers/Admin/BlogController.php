@@ -31,10 +31,10 @@ class BlogController extends Controller
             'category_id' => 'required|exists:post_categories,id',
             'featured_image' => 'nullable|image|max:2048',
             'status' => 'required|in:draft,published',
-            'translations' => 'required|array',
-            'translations.*.title' => 'required|string|max:255',
-            'translations.*.slug' => 'required|string|max:255',
-            'translations.*.content' => 'required|string',
+            'translations' => 'array',
+            'translations.*.title' => 'nullable|string|max:255',
+            'translations.*.slug' => 'nullable|string|max:255',
+            'translations.*.content' => 'nullable|string',
         ]);
 
         $imagePath = null;
@@ -54,7 +54,7 @@ class BlogController extends Controller
         $languages = Language::whereIn('code', array_keys($request->translations))->get()->keyBy('code');
 
         foreach ($request->translations as $locale => $data) {
-            if (! $languages->has($locale)) {
+            if (! $languages->has($locale) || empty($data['title'])) {
                 continue;
             }
 
@@ -87,10 +87,10 @@ class BlogController extends Controller
             'category_id' => 'required|exists:post_categories,id',
             'featured_image' => 'nullable|image|max:2048',
             'status' => 'required|in:draft,published',
-            'translations' => 'required|array',
-            'translations.*.title' => 'required|string|max:255',
-            'translations.*.slug' => 'required|string|max:255',
-            'translations.*.content' => 'required|string',
+            'translations' => 'array',
+            'translations.*.title' => 'nullable|string|max:255',
+            'translations.*.slug' => 'nullable|string|max:255',
+            'translations.*.content' => 'nullable|string',
         ]);
 
         if ($request->hasFile('featured_image')) {
@@ -107,7 +107,7 @@ class BlogController extends Controller
         $languages = Language::whereIn('code', array_keys($request->translations))->get()->keyBy('code');
 
         foreach ($request->translations as $locale => $data) {
-            if (! $languages->has($locale)) {
+            if (! $languages->has($locale) || empty($data['title'])) {
                 continue;
             }
 

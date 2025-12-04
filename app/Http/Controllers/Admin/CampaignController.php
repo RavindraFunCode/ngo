@@ -51,6 +51,7 @@ class CampaignController extends Controller
         $languages = Language::all()->keyBy('code');
 
         foreach ($request->translations as $locale => $data) {
+            if (empty($data['title'])) continue;
             if (isset($languages[$locale])) {
                 $campaign->translations()->create([
                     'language_id' => $languages[$locale]->id,
@@ -101,6 +102,7 @@ class CampaignController extends Controller
         $languages = Language::all()->keyBy('code');
 
         foreach ($request->translations as $locale => $data) {
+            if (empty($data['title'])) continue;
             if (isset($languages[$locale])) {
                 $campaign->translations()->updateOrCreate(
                     ['language_id' => $languages[$locale]->id],

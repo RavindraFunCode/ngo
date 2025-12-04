@@ -36,6 +36,7 @@ class PageController extends Controller
         ]);
 
         foreach ($request->translations as $locale => $data) {
+            if (empty($data['title'])) continue;
             $language = Language::where('code', $locale)->first();
             if ($language) {
                 $page->translations()->create([
@@ -73,6 +74,7 @@ class PageController extends Controller
         ]);
 
         foreach ($request->translations as $locale => $data) {
+            if (empty($data['title'])) continue;
             $language = Language::where('code', $locale)->first();
             if ($language) {
                 $page->translations()->updateOrCreate(

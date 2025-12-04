@@ -21,6 +21,7 @@
 
      <!-- App css (Require in all Page) -->
      <link href="{{ asset('assets/admin/css/app.min.css') }}" rel="stylesheet" type="text/css" />
+     <link href="{{ asset('assets/admin/css/ckeditor-dark.css') }}" rel="stylesheet" type="text/css" />
 
      <!-- Theme Config js (Require in all Page) -->
      <script src="{{ asset('assets/admin/js/config.js') }}"></script>
@@ -63,14 +64,18 @@
                               <div class="dropdown topbar-item">
                                    <a type="button" class="topbar-button" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="d-flex align-items-center">
-                                             <img class="rounded-circle" width="32" src="{{ asset('assets/admin/images/users/avatar-1.jpg') }}" alt="avatar-3">
+                                             <img class="rounded-circle" width="32" src="{{ Auth::user()->avatar ? asset('uploads/' . Auth::user()->avatar) : asset('assets/admin/images/users/avatar-1.jpg') }}" alt="{{ Auth::user()->name }}">
+                                             <span class="ms-2 d-none d-xl-block fw-medium user-name-text">{{ Auth::user()->name }}</span>
                                         </span>
                                    </a>
                                    <div class="dropdown-menu dropdown-menu-end">
                                         <!-- item-->
                                         <h6 class="dropdown-header">Welcome!</h6>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{ route('admin.profile.edit') }}">
                                              <i class="bx bx-user-circle text-muted fs-18 align-middle me-1"></i><span class="align-middle">Profile</span>
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('admin.password.edit') }}">
+                                             <i class="bx bx-lock text-muted fs-18 align-middle me-1"></i><span class="align-middle">Change Password</span>
                                         </a>
                                         
                                         <div class="dropdown-divider my-1"></div>
@@ -126,6 +131,14 @@
                          <li class="menu-title">Content</li>
 
                          <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.features.index') }}">
+                                <span class="nav-icon">
+                                    <iconify-icon icon="solar:list-check-bold-duotone"></iconify-icon>
+                                </span>
+                                <span class="nav-text"> Features </span>
+                            </a>
+                        </li>
+                         <li class="nav-item">
                               <a class="nav-link" href="{{ route('admin.pages.index') }}">
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
@@ -143,7 +156,7 @@
                               </a>
                               <ul id="blog-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                                    <li>
-                                        <a href="{{ route('admin.blog.index') }}">
+                                        <a href="{{ route('admin.blog.posts.index') }}">
                                              <iconify-icon icon="solar:list-bold-duotone"></iconify-icon>
                                              <span>All Posts</span>
                                         </a>
@@ -164,6 +177,47 @@
                                    </span>
                                    <span class="nav-text"> Menus </span>
                               </a>
+                         </li>
+
+                         <li class="nav-item">
+                              <a class="nav-link collapsed" data-bs-target="#homepage-nav" data-bs-toggle="collapse" href="#">
+                                   <span class="nav-icon">
+                                        <iconify-icon icon="solar:home-bold-duotone"></iconify-icon>
+                                   </span>
+                                   <span class="nav-text"> Homepage </span>
+                              </a>
+                              <ul id="homepage-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                                   <li>
+                                        <a href="{{ route('admin.sliders.index') }}">
+                                             <iconify-icon icon="solar:slider-minimalistic-horizontal-bold-duotone"></iconify-icon>
+                                             <span>Sliders</span>
+                                        </a>
+                                   </li>
+                                   <li>
+                                        <a href="{{ route('admin.team.index') }}">
+                                             <iconify-icon icon="solar:users-group-rounded-bold-duotone"></iconify-icon>
+                                             <span>Team</span>
+                                        </a>
+                                   </li>
+                                   <li>
+                                        <a href="{{ route('admin.testimonials.index') }}">
+                                             <iconify-icon icon="solar:chat-round-like-bold-duotone"></iconify-icon>
+                                             <span>Testimonials</span>
+                                        </a>
+                                   </li>
+                                   <li>
+                                        <a href="{{ route('admin.partners.index') }}">
+                                             <iconify-icon icon="solar:hand-shake-bold-duotone"></iconify-icon>
+                                             <span>Partners</span>
+                                        </a>
+                                   </li>
+                                   <li>
+                                        <a href="{{ route('admin.gallery.index') }}">
+                                             <iconify-icon icon="solar:gallery-bold-duotone"></iconify-icon>
+                                             <span>Gallery</span>
+                                        </a>
+                                   </li>
+                              </ul>
                          </li>
 
                          <li class="nav-item">
@@ -189,13 +243,7 @@
                               </ul>
                          </li>
 
-
-
                          <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:letter-bold-duotone"></iconify-icon>
-                                   </span>
                               <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:clipboard-list-bold-duotone"></iconify-icon>
@@ -218,14 +266,7 @@
                               </ul>
                          </li>
 
-                         <li class="nav-item">
-                              <a class="nav-link" href="#">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:notebook-bold-duotone"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Blog / News </span>
-                              </a>
-                         </li>
+
 
                          <li class="menu-title">System</li>
 
@@ -328,6 +369,7 @@
      <!-- END Wrapper -->
 
      <!-- Vendor Javascript (Require in all Page) -->
+     <script src="{{ asset('assets/admin/js/jquery.js') }}"></script>
      <script src="{{ asset('assets/admin/js/vendor.js') }}"></script>
 
      <!-- App Javascript (Require in all Page) -->

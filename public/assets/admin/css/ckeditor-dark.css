@@ -1,0 +1,75 @@
+/* CKEditor Dark Mode Overrides */
+[data-bs-theme="dark"] .cke_chrome {
+    border-color: #444 !important;
+}
+
+[data-bs-theme="dark"] .cke_inner {
+    background: #222 !important;
+}
+
+[data-bs-theme="dark"] .cke_top {
+    background: #2b2b2b !important;
+    border-bottom-color: #444 !important;
+}
+
+[data-bs-theme="dark"] .cke_bottom {
+    background: #2b2b2b !important;
+    border-top-color: #444 !important;
+}
+
+[data-bs-theme="dark"] .cke_toolgroup {
+    border-color: #444 !important;
+    background: #333 !important;
+}
+
+[data-bs-theme="dark"] a.cke_button_off:hover,
+[data-bs-theme="dark"] a.cke_button_off:focus,
+[data-bs-theme="dark"] a.cke_button_off:active,
+[data-bs-theme="dark"] a.cke_button_on {
+    background: #444 !important;
+    border-color: #555 !important;
+}
+
+[data-bs-theme="dark"] .cke_button_icon {
+    filter: invert(1);
+}
+
+[data-bs-theme="dark"] .cke_combo_text {
+    color: #eee !important;
+}
+
+[data-bs-theme="dark"] .cke_combo_open {
+    border-left-color: #444 !important;
+}
+
+[data-bs-theme="dark"] .cke_combo_arrow {
+    border-top-color: #eee !important;
+}
+
+[data-bs-theme="dark"] .cke_wysiwyg_frame,
+[data-bs-theme="dark"] .cke_wysiwyg_div {
+    background-color: #222 !important;
+    color: #eee !important;
+}
+
+/* Fix for dropdowns */
+[data-bs-theme="dark"] .cke_panel {
+    background-color: #2b2b2b !important;
+    border-color: #444 !important;
+}
+
+[data-bs-theme="dark"] .cke_panel_grouptitle {
+    background-color: #333 !important;
+    color: #eee !important;
+    border-bottom-color: #444 !important;
+}
+
+[data-bs-theme="dark"] .cke_panel_listItem a {
+    color: #eee !important;
+}
+
+[data-bs-theme="dark"] .cke_panel_listItem a:hover,
+[data-bs-theme="dark"] .cke_panel_listItem a:focus,
+[data-bs-theme="dark"] .cke_panel_listItem a:active {
+    background-color: #444 !important;
+}

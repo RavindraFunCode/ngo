@@ -15,9 +15,11 @@
                 @endif
 
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs nav-justified mb-3" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#general" role="tab">General</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#general" role="tab">General</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#contact" role="tab">Contact</a>
@@ -31,7 +33,17 @@
                 <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="tab-content">
-                        <div class="tab-pane active" id="general" role="tabpanel">
+                        <div class="tab-pane active" id="home" role="tabpanel">
+                            <div class="mb-3">
+                                <label class="form-label">Welcome Title</label>
+                                <input type="text" class="form-control" name="welcome_title" value="{{ $settings['home']->where('key', 'welcome_title')->first()->value ?? '' }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Welcome Text</label>
+                                <textarea class="form-control" name="welcome_text" rows="4">{{ $settings['home']->where('key', 'welcome_text')->first()->value ?? '' }}</textarea>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="general" role="tabpanel">
                             <div class="mb-3">
                                 <label class="form-label">Site Name</label>
                                 <input type="text" class="form-control" name="site_name" value="{{ $settings['general']->where('key', 'site_name')->first()->value ?? '' }}">

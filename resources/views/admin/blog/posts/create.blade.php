@@ -10,7 +10,7 @@
                 <h4 class="card-title">Add Blog Post</h4>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.blog.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.blog.posts.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -91,7 +91,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-3">Save Post</button>
-                    <a href="{{ route('admin.blog.index') }}" class="btn btn-secondary mt-3">Cancel</a>
+                    <a href="{{ route('admin.blog.posts.index') }}" class="btn btn-secondary mt-3">Cancel</a>
                 </form>
             </div>
         </div>
@@ -100,7 +100,7 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script src="{{ asset('assets/library/ckeditor/ckeditor.js') }}"></script>
 <script>
     document.querySelectorAll('.editor').forEach(function(element) {
         CKEDITOR.replace(element);

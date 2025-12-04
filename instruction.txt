@@ -339,3 +339,101 @@ The build is considered successful if:
   - Browse blog/news.
 
 All these without modifying code for day-to-day operations; everything controlled from Admin Dashboard.
+
+
+
+
+
+
+Below is the recommended full page list for NGO website.
+
+🌐 1. Public Website Pages (Frontend)
+A) Home & Static Pages
+
+Home
+
+About Us
+
+Our Mission
+
+Our Vision
+
+Our Story / History
+
+Our Team
+
+Board Members
+
+FAQ
+
+Testimonials
+
+Photo Gallery
+
+Video Gallery
+
+
+
+C) Campaigns / Causes
+
+Our Campaigns / Causes (listing page)
+
+Single Campaign Page
+
+Donate Now (General Donation Page)
+
+D) Get Involved
+
+Volunteer With Us
+
+Volunteer Form Page
+
+Partner With Us
+
+Work With Us / Careers
+
+E) Blog / News
+
+Blog / News Listing Page
+
+Single Blog / News Article Page
+
+Categories Page (optional)
+
+F) Contact & Communication
+
+Contact Us
+
+Contact Form Submission Thank You
+
+Become a Donor
+
+Success Story Listing
+
+Single Success Story Page
+
+⚖️ 2. Legal & Policy Pages
+
+Privacy Policy
+
+Terms & Conditions
+
+Refund Policy
+
+Cookie Policy
+
+NGO Registration Details / Compliance Page
+
+Annual Reports Page (PDF Downloads)
+
+💳 3. Donation Flow Pages
+
+Donation Form Page
+
+Checkout Page (Gateway Redirect)
+
+Thank You (Donation Success)
+
+Payment Failed Page
+
+implement the website

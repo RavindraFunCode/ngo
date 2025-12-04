@@ -59,9 +59,14 @@
                                                        @enderror
                                                   </div>
                                                   <div class="mb-3">
-                                                       <a href="#" class="float-end text-muted text-unline-dashed ms-1">Reset password</a>
+                                                       <a href="{{ route('admin.password.request') }}" class="float-end text-muted text-unline-dashed ms-1">Reset password</a>
                                                        <label class="form-label" for="password">Password</label>
-                                                       <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                                                       <div class="input-group">
+                                                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                                                            <button class="btn btn-outline-secondary password-toggle" type="button" data-target="password">
+                                                                 <iconify-icon icon="solar:eye-bold-duotone"></iconify-icon>
+                                                            </button>
+                                                       </div>
                                                        @error('password')
                                                             <div class="text-danger">{{ $message }}</div>
                                                        @enderror
@@ -99,6 +104,24 @@
 
      <!-- App Javascript (Require in all Page) -->
      <script src="{{ asset('assets/admin/js/app.js') }}"></script>
+
+     <script>
+         document.querySelectorAll('.password-toggle').forEach(button => {
+             button.addEventListener('click', function() {
+                 const targetId = this.getAttribute('data-target');
+                 const input = document.getElementById(targetId);
+                 const icon = this.querySelector('iconify-icon');
+     
+                 if (input.type === 'password') {
+                     input.type = 'text';
+                     icon.setAttribute('icon', 'solar:eye-closed-bold-duotone');
+                 } else {
+                     input.type = 'password';
+                     icon.setAttribute('icon', 'solar:eye-bold-duotone');
+                 }
+             });
+         });
+     </script>
 
 </body>
 </html>

@@ -14,7 +14,7 @@ also manage social media links, and content
 
 read these files carefully, this is project details
 admin dashboard html folder path: /Applications/MAMP/htdocs/new-era/ngo/admin-dashboard
-website html folder path: will provide soon
+website html folder path: /Applications/MAMP/htdocs/new-era/ngo/website
 project features file path: /Applications/MAMP/htdocs/new-era/ngo/instruction.txt
 db structure file path: /Applications/MAMP/htdocs/new-era/ngo/ngo.sql
 
@@ -23,3 +23,9 @@ i will provide website html files later till please complete admin dashboard wit
 all the project feature are in instruction.txt file, read it carefully and implement all the features. also run migrations files after reading sql file.
 and make sure to implement all the features of admin dashboard as mentioned in instruction.txt file.
 time to time run the project on browser and check if everything is working fine.
+
+
+
+
+website html path is: /Applications/MAMP/htdocs/new-era/ngo/website
+implement website html files
