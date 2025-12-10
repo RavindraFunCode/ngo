@@ -14,11 +14,11 @@
                     @csrf
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="slug" class="form-label">Slug</label>
-                            <input type="text" class="form-control" id="slug" name="slug" required>
+                            <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="slug" name="slug" required value="{{ old('slug') }}" maxlength="255">
                         </div>
                         <div class="col-md-6">
-                            <label for="category_id" class="form-label">Category</label>
+                            <label for="category_id" class="form-label">Category <span class="text-danger">*</span></label>
                             <select class="form-control" id="category_id" name="category_id" required>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->getTranslation(app()->getLocale())->name ?? $category->slug }}</option>
@@ -29,7 +29,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="published_at" class="form-label">Published At</label>
-                            <input type="datetime-local" class="form-control" id="published_at" name="published_at">
+                            <input type="datetime-local" class="form-control" id="published_at" name="published_at" value="{{ old('published_at') }}">
                         </div>
                         <div class="col-md-6">
                             <label for="featured_image" class="form-label">Featured Image</label>
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
+                        <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                         <select class="form-control" id="status" name="status" required>
                             <option value="draft">Draft</option>
                             <option value="published">Published</option>
@@ -59,12 +59,12 @@
                         @foreach($languages as $index => $language)
                         <div class="tab-pane {{ $index === 0 ? 'active' : '' }}" id="lang-{{ $language->code }}" role="tabpanel">
                             <div class="mb-3">
-                                <label class="form-label">Title</label>
-                                <input type="text" class="form-control" name="translations[{{ $language->code }}][title]">
+                                <label class="form-label">Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][title]" required maxlength="255">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Slug</label>
-                                <input type="text" class="form-control" name="translations[{{ $language->code }}][slug]">
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][slug]" maxlength="255">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Excerpt</label>
@@ -76,7 +76,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Meta Title</label>
-                                <input type="text" class="form-control" name="translations[{{ $language->code }}][meta_title]">
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][meta_title]" maxlength="255">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Meta Description</label>
@@ -84,7 +84,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Meta Keywords</label>
-                                <input type="text" class="form-control" name="translations[{{ $language->code }}][meta_keywords]">
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][meta_keywords]" maxlength="255">
                             </div>
                         </div>
                         @endforeach

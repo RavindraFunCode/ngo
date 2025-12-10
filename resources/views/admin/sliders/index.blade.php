@@ -66,7 +66,7 @@
                     @csrf
                     <input type="hidden" id="sliderId" name="id">
                     <div class="mb-3">
-                        <label for="image" class="form-label">Image</label>
+                        <label for="image" class="form-label">Image <span class="text-danger">*</span></label>
                         <input type="file" class="form-control" id="image" name="image">
                         <div id="imagePreview" class="mt-2"></div>
                     </div>
@@ -88,10 +88,31 @@
     </div>
 </div>
 
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this slider?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
 <script>
+    let deleteSliderId = null;
+
     function resetForm() {
         $('#sliderForm')[0].reset();
         $('#sliderId').val('');
@@ -135,11 +156,14 @@
                 location.reload(); 
             },
             error: function(xhr) {
-                var errors = xhr.responseJSON.errors;
                 var errorHtml = '<div class="alert alert-danger"><ul>';
-                $.each(errors, function(key, value) {
-                    errorHtml += '<li>' + value + '</li>';
-                });
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        errorHtml += '<li>' + value + '</li>';
+                    });
+                } else {
+                    errorHtml += '<li>' + (xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred. Please try again.') + '</li>';
+                }
                 errorHtml += '</ul></div>';
                 $('#modal-alert-container').html(errorHtml);
             }
@@ -147,19 +171,30 @@
     }
 
     function deleteSlider(id) {
-        if (confirm('Are you sure?')) {
-            $.ajax({
-                url: '/admin/sliders/' + id,
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#slider-' + id).remove();
-                    showAlert('success', response.success);
-                }
-            });
-        }
+        deleteSliderId = id;
+        $('#deleteModal').modal('show');
+    }
+
+    function confirmDelete() {
+        if (!deleteSliderId) return;
+
+        $.ajax({
+            url: '/admin/sliders/' + deleteSliderId,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE'
+            },
+            success: function(response) {
+                $('#deleteModal').modal('hide');
+                $('#slider-' + deleteSliderId).remove();
+                showAlert('success', response.success);
+            },
+            error: function(xhr) {
+                $('#deleteModal').modal('hide');
+                alert('Error: ' + (xhr.responseJSON ? xhr.responseJSON.message : 'Something went wrong.'));
+            }
+        });
     }
 
     function showAlert(type, message) {

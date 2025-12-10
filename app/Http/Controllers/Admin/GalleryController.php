@@ -18,7 +18,7 @@ class GalleryController extends Controller
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'image' => 'required|image',
-            'category' => 'required',
+            'category' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -29,6 +29,7 @@ class GalleryController extends Controller
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('gallery', 'public');
         }
+        $data['is_active'] = $request->has('is_active');
 
         GalleryItem::create($data);
         return response()->json(['success' => 'Gallery item created successfully.']);
@@ -43,7 +44,7 @@ class GalleryController extends Controller
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'image' => 'nullable|image',
-            'category' => 'required',
+            'category' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {

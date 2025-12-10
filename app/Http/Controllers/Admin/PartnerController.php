@@ -43,7 +43,8 @@ class PartnerController extends Controller
     public function update(Request $request, Partner $partner)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|max:255',
+            'url' => 'nullable|url|max:255',
             'logo' => 'nullable|image',
             'order' => 'integer',
         ]);

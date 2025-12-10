@@ -17,9 +17,9 @@ class TeamMemberController extends Controller
     public function store(Request $request)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'name' => 'required',
-            'role' => 'required',
-            'image' => 'nullable|image',
+            'name' => 'required|max:255',
+            'role' => 'required|max:255',
+            'image' => 'required|image',
             'order' => 'integer',
         ]);
 
@@ -31,6 +31,7 @@ class TeamMemberController extends Controller
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('team', 'public');
         }
+        $data['is_active'] = $request->has('is_active');
         
         TeamMember::create($data);
         return response()->json(['success' => 'Team member created successfully.']);
@@ -44,8 +45,8 @@ class TeamMemberController extends Controller
     public function update(Request $request, TeamMember $team)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'name' => 'required',
-            'role' => 'required',
+            'name' => 'required|max:255',
+            'role' => 'required|max:255',
             'image' => 'nullable|image',
             'order' => 'integer',
         ]);

@@ -10,9 +10,14 @@ use Illuminate\Support\Str;
 
 class CampaignController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $campaigns = Campaign::with('translations')->latest()->paginate(10);
+        
+        if ($request->ajax()) {
+            return view('admin.campaigns.partials.table', compact('campaigns'))->render();
+        }
+
         return view('admin.campaigns.index', compact('campaigns'));
     }
 
@@ -66,7 +71,7 @@ class CampaignController extends Controller
             }
         }
 
-        return redirect()->route('admin.campaigns.index')->with('success', 'Campaign created successfully.');
+        return response()->json(['success' => true, 'redirect' => route('admin.campaigns.index')]);
     }
 
     public function edit(Campaign $campaign)
@@ -119,13 +124,13 @@ class CampaignController extends Controller
             }
         }
 
-        return redirect()->route('admin.campaigns.index')->with('success', 'Campaign updated successfully.');
+        return response()->json(['success' => true, 'redirect' => route('admin.campaigns.index')]);
     }
 
     public function destroy(Campaign $campaign)
     {
         $campaign->translations()->delete();
         $campaign->delete();
-        return redirect()->route('admin.campaigns.index')->with('success', 'Campaign deleted successfully.');
+        return response()->json(['success' => true, 'message' => 'Campaign deleted successfully.']);
     }
 }

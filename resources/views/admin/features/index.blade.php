@@ -70,7 +70,7 @@
                     @csrf
                     <input type="hidden" id="featureId" name="id">
                     <div class="mb-3">
-                        <label for="title" class="form-label">Title</label>
+                        <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="mb-3">
@@ -78,7 +78,7 @@
                         <input type="text" class="form-control" id="subtitle" name="subtitle">
                     </div>
                     <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
+                        <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                     </div>
                     <div class="mb-3">
@@ -108,10 +108,31 @@
     </div>
 </div>
 
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this feature?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
 <script>
+    let deleteFeatureId = null;
+
     function resetForm() {
         $('#featureForm')[0].reset();
         $('#featureId').val('');
@@ -141,7 +162,6 @@
     function saveFeature() {
         var id = $('#featureId').val();
         var url = id ? '/admin/features/' + id : '/admin/features';
-        var method = id ? 'POST' : 'POST'; // Using POST for both, but adding _method for PUT
         var formData = new FormData($('#featureForm')[0]);
         
         if (id) {
@@ -157,14 +177,17 @@
             success: function(response) {
                 $('#featureModal').modal('hide');
                 showAlert('success', response.success);
-                location.reload(); // Simple reload to refresh table. For full AJAX, we'd append/update row.
+                location.reload(); 
             },
             error: function(xhr) {
-                var errors = xhr.responseJSON.errors;
                 var errorHtml = '<div class="alert alert-danger"><ul>';
-                $.each(errors, function(key, value) {
-                    errorHtml += '<li>' + value + '</li>';
-                });
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        errorHtml += '<li>' + value + '</li>';
+                    });
+                } else {
+                    errorHtml += '<li>' + (xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred. Please try again.') + '</li>';
+                }
                 errorHtml += '</ul></div>';
                 $('#modal-alert-container').html(errorHtml);
             }
@@ -172,19 +195,30 @@
     }
 
     function deleteFeature(id) {
-        if (confirm('Are you sure?')) {
-            $.ajax({
-                url: '/admin/features/' + id,
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#feature-' + id).remove();
-                    showAlert('success', response.success);
-                }
-            });
-        }
+        deleteFeatureId = id;
+        $('#deleteModal').modal('show');
+    }
+
+    function confirmDelete() {
+        if (!deleteFeatureId) return;
+
+        $.ajax({
+            url: '/admin/features/' + deleteFeatureId,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE'
+            },
+            success: function(response) {
+                $('#deleteModal').modal('hide');
+                $('#feature-' + deleteFeatureId).remove();
+                showAlert('success', response.success);
+            },
+            error: function(xhr) {
+                $('#deleteModal').modal('hide');
+                alert('Error: ' + (xhr.responseJSON ? xhr.responseJSON.message : 'Something went wrong.'));
+            }
+        });
     }
 
     function showAlert(type, message) {

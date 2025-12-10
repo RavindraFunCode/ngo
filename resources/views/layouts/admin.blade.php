@@ -217,6 +217,18 @@
                                              <span>Gallery</span>
                                         </a>
                                    </li>
+                                   <li>
+                                        <a href="{{ route('admin.faq-categories.index') }}">
+                                             <iconify-icon icon="solar:tag-bold-duotone"></iconify-icon>
+                                             <span>FAQ Categories</span>
+                                        </a>
+                                   </li>
+                                   <li>
+                                        <a href="{{ route('admin.faqs.index') }}">
+                                             <iconify-icon icon="solar:question-circle-bold-duotone"></iconify-icon>
+                                             <span>FAQs</span>
+                                        </a>
+                                   </li>
                               </ul>
                          </li>
 

@@ -25,7 +25,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'slug' => 'required|unique:post_categories,slug',
+            'slug' => 'required|unique:post_categories,slug|max:255',
             'is_active' => 'boolean',
             'translations' => 'required|array',
             'translations.*.name' => 'required|string|max:255',
@@ -64,7 +64,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'slug' => 'required|unique:post_categories,slug,' . $category->id,
+            'slug' => 'required|unique:post_categories,slug,' . $category->id . '|max:255',
             'is_active' => 'boolean',
             'translations' => 'required|array',
             'translations.*.name' => 'required|string|max:255',

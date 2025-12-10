@@ -22,7 +22,7 @@
                                 <a class="thm-btn" href="{{ $slider->button_link }}">{{ $slider->button_text }}</a>
                             </div>
                         </div>
-                    </div>-
+                    </div>
                 </li>
                 @endforeach
             </ul>
@@ -165,172 +165,63 @@
         </div>
     </section>
 
-    <!-- Fact Counter -->
-    <section class="fact-counter-section" style="background-image: url('{{ asset('website/images/background/5.jpg') }}');">
+    <!-- Team Section (Style 2) -->
+    <section class="team-style-2 sec-padd2">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="counter-item">
-                        <div class="icon">
-                            <i class="flaticon-volunteer"></i>
-                        </div>
-                        <div class="content">
-                            <h2 class="count">{{ $settings['count_team'] ?? '50' }}</h2>
-                            <span>Team Members</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="counter-item">
-                        <div class="icon">
-                            <i class="flaticon-trophy"></i>
-                        </div>
-                        <div class="content">
-                            <h2 class="count">{{ $settings['count_awards'] ?? '12' }}</h2>
-                            <span>Winning Awards</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="counter-item">
-                        <div class="icon">
-                            <i class="flaticon-solidarity"></i>
-                        </div>
-                        <div class="content">
-                            <h2 class="count">{{ $settings['count_experienced'] ?? '10' }}</h2>
-                            <span>Experienced</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="counter-item">
-                        <div class="icon">
-                            <i class="flaticon-help"></i>
-                        </div>
-                        <div class="content">
-                            <h2 class="count">{{ $settings['count_projects'] ?? '150' }}</h2>
-                            <span>Project Done</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section class="gallery-section pt-120 pb-120">
-        <div class="container">
-            <div class="section-title text-center mb-50">
-                <span class="sub-title">Our Gallery</span>
-                <h2 class="title">Our Photo Gallery</h2>
-            </div>
-            <div class="row">
-                @foreach($gallery as $item)
-                <div class="col-lg-4 col-md-6">
-                    <div class="gallery-item">
-                        <div class="gallery-img">
-                            <img src="{{ asset('uploads/' . $item->image) }}" alt="{{ $item->title }}">
-                            <div class="gallery-overlay">
-                                <a href="{{ asset('uploads/' . $item->image) }}" class="img-popup"><i class="fal fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="about-section pt-120 pb-120">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="about-image-wrap">
-                        <div class="about-image-1">
-                            <img src="{{ asset($settings['home_about_image_1'] ?? 'website/images/resource/about1.jpg') }}" alt="About">
-                        </div>
-                        <div class="about-image-2">
-                            <img src="{{ asset($settings['home_about_image_2'] ?? 'website/images/resource/about2.jpg') }}" alt="About">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="about-content">
-                        <div class="section-title">
-                            <span class="sub-title">About Us</span>
-                            <h2 class="title">{{ $settings['home_about_title'] ?? 'About Our Humanity' }}</h2>
-                        </div>
-                        <p>{{ $settings['home_about_text'] ?? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' }}</p>
-                        <a href="{{ route('about') }}" class="main-btn">Learn More <i class="fal fa-long-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="gallery-section full-width">
-        <div class="container">
-            <div class="section-title center">
-                <h2>Our <span class="thm-color">Gallery</span></h2>
-            </div>
-            <div class="filter-list clearfix">
-                <div class="filter-box clearfix">
-                    <ul class="filter-tabs filter-btns clearfix">
-                        <li class="filter active" data-role="button" data-filter="all"><span class="txt">All</span></li>
-                        <li class="filter" data-role="button" data-filter=".child"><span class="txt">Child</span></li>
-                        <li class="filter" data-role="button" data-filter=".charity"><span class="txt">Charity</span></li>
-                        <li class="filter" data-role="button" data-filter=".sponsorship"><span class="txt">Sponsorship</span></li>
-                        <li class="filter" data-role="button" data-filter=".volunteering"><span class="txt">Volunteering</span></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="filter-list-container">
-                <div class="col-md-3 col-sm-6 col-xs-12 mix mix_all default-item child">
-                    <div class="inner-box">
-                        <div class="img-box">
-                            <img alt="" src="{{ asset('website/images/project/1.jpg') }}">
-                            <div class="overlay">
-                                <div class="box">
-                                    <div class="content">
-                                        <a class="img-popup" href="{{ asset('website/images/project/1.jpg') }}"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add more gallery items here as needed -->
-            </div>
-        </div>
-    </section>
-
-    <section class="team-style-1 sec-padd2">
-        <div class="container">
-            <div class="section-title center">
-                <h2>Meet Our <span class="thm-color">Team</span></h2>
+            <div class="section-title">
+                <h2>Meet Our <span class="thm-color">Volunteers</span></h2>
             </div>
             <div class="row">
                 @foreach($team as $member)
-                <article class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="single-team-member">
-                        <figure class="img-box">
-                            <a href="#"><img alt="{{ $member->name }}" src="{{ asset('uploads/' . $member->image) }}"></a>
-                            <div class="overlay">
-                                <div class="inner-box">
-                                    <ul class="social">
-                                        @if($member->social_links)
-                                            @foreach($member->social_links as $platform => $link)
-                                            <li><a href="{{ $link }}"><i class="fa fa-{{ $platform }}"></i></a></li>
-                                            @endforeach
-                                        @endif
-                                    </ul>
+                <article class="item col-md-3 col-sm-6 col-xs-12">
+                    <div class="inner-box">
+                        <div class="img-box">
+                            <img alt="{{ $member->name }}" src="{{ asset('uploads/' . $member->image) }}">
+                            <div class="overlay3">
+                                <ul class="social-icon">
+                                    @if($member->social_links)
+                                        @foreach($member->social_links as $platform => $link)
+                                        <li><a href="{{ $link }}"><i class="fa fa-{{ $platform }}"></i></a></li>
+                                        @endforeach
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="author center">
+                        <h4>{{ $member->name }}</h4>
+                        <p>{{ $member->role }}</p>
+                    </div>
+                </article>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section (Latest Projects) -->
+    <section class="gallery sec-padd">
+        <div class="container">
+            <div class="section-title center">
+                <h2>Latest <span class="thm-color">Projects</span></h2>
+            </div>
+            <div class="gallery-carousel">
+                @foreach($gallery as $item)
+                <article class="item">
+                    <div class="inner-box">
+                        <img alt="{{ $item->title }}" src="{{ asset('uploads/' . $item->image) }}">
+                        <div class="overlay">
+                            <div class="top">
+                                <div class="box">
+                                    <div class="content">
+                                        <a class="img-popup thm-btn" data-group="1" href="{{ asset('uploads/' . $item->image) }}">view project</a>
+                                    </div>
                                 </div>
                             </div>
-                        </figure>
-                        <div class="author-info">
-                            <a href="#"><h4>{{ $member->name }}</h4></a>
-                            <p>{{ $member->role }}</p>
+                            <div class="bottom">
+                                <a href="#">
+                                    <h4>{{ $item->title }}</h4>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </article>
@@ -339,28 +230,111 @@
         </div>
     </section>
 
-    <section class="testimonial-section-one sec-padd" style="background-image: url({{ asset('website/images/background/5.jpg') }});">
+    <!-- Fact Counter (Style 2) -->
+    <section class="fact-counter fact-counter-2 sec-padd" style="background-image: url('{{ asset('website/images/background/10.jpg') }}');">
         <div class="container">
-            <div class="section-title center">
-                <h2>Testimonials</h2>
-            </div>
-            <div class="testimonial-carousel">
-                @foreach($testimonials as $testimonial)
-                <article class="single-testimonial-item center">
-                    <figure class="img-box">
-                        <a href="#"><img alt="{{ $testimonial->name }}" src="{{ asset('uploads/' . $testimonial->image) }}"></a>
-                    </figure>
+            <div class="row clearfix">
+                <article class="col-md-6 col-sm-12">
                     <div class="content">
-                        <div class="text">
-                            <p>“ {{ $testimonial->content }} ”</p>
-                        </div>
-                        <div class="author-info">
-                            <h4>{{ $testimonial->name }}</h4>
-                            <p>{{ $testimonial->role }}</p>
+                        <p class="thm-color">Want to join with us</p>
+                        <h2>Become a proud volunteer</h2>
+                        <p>When you bring together those who have, with those who have not - miracles happen. Become a time hero by volunteering with us. Meet new friends, gain new skills, get happiness and have fun!</p>
+                        <div class="link">
+                            <a class="thm-btn" href="{{ route('volunteer') }}">Join with us</a>
                         </div>
                     </div>
                 </article>
-                @endforeach
+                <article class="col-md-6 col-sm-12">
+                    <div class="counter-outer row clearfix">
+                        <!--Team Members-->
+                        <article class="column counter-column col-md-6 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0ms">
+                            <div class="item clearfix">
+                                <div class="icon"><i class="icon-people-1"></i></div>
+                                <div class="count-area">
+                                    <div class="count-outer"><span class="count-text" data-speed="3000" data-stop="{{ $settings['count_team'] ?? '50' }}">0</span></div>
+                                </div>
+                                <h4 class="counter-title">Team Members</h4>
+                            </div>
+                        </article>
+                        
+                        <!--Winning Awards-->
+                        <article class="column counter-column col-md-6 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0ms">
+                            <div class="item clearfix">
+                                <div class="icon"><i class="icon-ribbon"></i></div>
+                                <div class="count-area">
+                                    <div class="count-outer"><span class="count-text" data-speed="3000" data-stop="{{ $settings['count_awards'] ?? '12' }}">0</span></div>
+                                </div>
+                                <h4 class="counter-title">Winning Awards</h4>
+                            </div>
+                        </article>
+
+                        <!--Experienced-->
+                        <article class="column counter-column col-md-6 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0ms">
+                            <div class="item clearfix">
+                                <div class="icon"><i class="icon-nature-1"></i></div>
+                                <div class="count-area">
+                                    <div class="count-outer"><span class="count-text" data-speed="3000" data-stop="{{ $settings['count_experienced'] ?? '10' }}">0</span></div>
+                                </div>
+                                <h4 class="counter-title">Experienced</h4>
+                            </div>
+                        </article>
+
+                        <!--Project Done-->
+                        <article class="column counter-column col-md-6 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0ms">
+                            <div class="item clearfix">
+                                <div class="icon"><i class="icon-shapes"></i></div>
+                                <div class="count-area">
+                                    <div class="count-outer"><span class="count-text" data-speed="3000" data-stop="{{ $settings['count_projects'] ?? '150' }}">0</span></div>
+                                </div>
+                                <h4 class="counter-title">Project Done</h4>
+                            </div>
+                        </article>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonial-section-one sec-padd" style="background-image: url({{ asset('website/images/background/8.jpg') }});">
+        <div class="container">
+            <div class="section-title center">
+                <h2>Words From <span class="thm-color">People</span></h2>
+            </div>
+            <div class="inner-container">
+                <div class="carousel-outer">
+                    <!--Slider Content-->
+                    <ul class="testimonial-slider-content">
+                        @foreach($testimonials as $testimonial)
+                        <li class="slide-item">
+                            <h4 class="title">“ {{ Str::limit($testimonial->content, 100) }} ”</h4>
+                            <div class="text">
+                                {{ $testimonial->content }}
+                            </div>
+                            <div class="author">
+                                <h4>{{ $testimonial->name }}</h4>
+                                <p>{{ $testimonial->role }}</p>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                    
+                    <div class="styled-dots"></div>
+                    
+                    <div class="pagers-outer">
+                        <!--Slider Pager-->
+                        <ul class="testimonial-slider-pager">
+                            @foreach($testimonials as $testimonial)
+                            <li class="pager-item">
+                                <div class="inner-box">
+                                    <figure class="author-thumb">
+                                        <img alt="{{ $testimonial->name }}" src="{{ asset('uploads/' . $testimonial->image) }}">
+                                    </figure>
+                                </div>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -368,7 +342,7 @@
     <section class="blog-section sec-padd2">
         <div class="container">
             <div class="section-title center">
-                <h2>Latest <span class="thm-color">News</span></h2>
+                <h2>Latest From <span class="thm-color">News</span></h2>
             </div>
             <div class="row">
                 @foreach($latestPosts as $post)

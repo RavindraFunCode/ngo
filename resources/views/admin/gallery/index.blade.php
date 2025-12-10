@@ -66,7 +66,7 @@
                     @csrf
                     <input type="hidden" id="itemId" name="id">
                     <div class="mb-3">
-                        <label for="category" class="form-label">Category</label>
+                        <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
                         <select class="form-select" id="category" name="category" required>
                             <option value="Education">Education</option>
                             <option value="Health">Health</option>
@@ -75,7 +75,7 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="image" class="form-label">Image</label>
+                        <label for="image" class="form-label">Image <span class="text-danger">*</span></label>
                         <input type="file" class="form-control" id="image" name="image">
                         <div id="imagePreview" class="mt-2"></div>
                     </div>
@@ -93,10 +93,31 @@
     </div>
 </div>
 
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this item?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
 <script>
+    let deleteItemId = null;
+
     function resetForm() {
         $('#galleryForm')[0].reset();
         $('#itemId').val('');
@@ -140,11 +161,14 @@
                 location.reload(); 
             },
             error: function(xhr) {
-                var errors = xhr.responseJSON.errors;
                 var errorHtml = '<div class="alert alert-danger"><ul>';
-                $.each(errors, function(key, value) {
-                    errorHtml += '<li>' + value + '</li>';
-                });
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        errorHtml += '<li>' + value + '</li>';
+                    });
+                } else {
+                    errorHtml += '<li>' + (xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred. Please try again.') + '</li>';
+                }
                 errorHtml += '</ul></div>';
                 $('#modal-alert-container').html(errorHtml);
             }
@@ -152,19 +176,30 @@
     }
 
     function deleteItem(id) {
-        if (confirm('Are you sure?')) {
-            $.ajax({
-                url: '/admin/gallery/' + id,
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#item-' + id).remove();
-                    showAlert('success', response.success);
-                }
-            });
-        }
+        deleteItemId = id;
+        $('#deleteModal').modal('show');
+    }
+
+    function confirmDelete() {
+        if (!deleteItemId) return;
+
+        $.ajax({
+            url: '/admin/gallery/' + deleteItemId,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE'
+            },
+            success: function(response) {
+                $('#deleteModal').modal('hide');
+                $('#item-' + deleteItemId).remove();
+                showAlert('success', response.success);
+            },
+            error: function(xhr) {
+                $('#deleteModal').modal('hide');
+                alert('Error: ' + (xhr.responseJSON ? xhr.responseJSON.message : 'Something went wrong.'));
+            }
+        });
     }
 
     function showAlert(type, message) {

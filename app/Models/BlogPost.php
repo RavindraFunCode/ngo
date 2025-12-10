@@ -43,4 +43,21 @@ class BlogPost extends Model
     {
         return $this->belongsTo(User::class, 'author_id');
     }
+
+    public function getTitleAttribute()
+    {
+        $translation = $this->getTranslation(app()->getLocale());
+        return $translation ? $translation->title : null;
+    }
+
+    public function getContentAttribute()
+    {
+        $translation = $this->getTranslation(app()->getLocale());
+        return $translation ? $translation->content : null;
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->featured_image ? asset('uploads/' . $this->featured_image) : asset('website/images/blog/1.jpg');
+    }
 }

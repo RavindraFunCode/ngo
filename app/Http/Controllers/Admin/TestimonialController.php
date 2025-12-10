@@ -17,9 +17,9 @@ class TestimonialController extends Controller
     public function store(Request $request)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|max:255',
             'content' => 'required',
-            'image' => 'nullable|image',
+            'image' => 'required|image',
         ]);
 
         if ($validator->fails()) {
@@ -30,6 +30,7 @@ class TestimonialController extends Controller
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('testimonials', 'public');
         }
+        $data['is_active'] = $request->has('is_active');
 
         Testimonial::create($data);
         return response()->json(['success' => 'Testimonial created successfully.']);
@@ -43,7 +44,7 @@ class TestimonialController extends Controller
     public function update(Request $request, Testimonial $testimonial)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|max:255',
             'content' => 'required',
             'image' => 'nullable|image',
         ]);

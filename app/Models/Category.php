@@ -34,4 +34,10 @@ class Category extends Model
     {
         return $this->hasMany(BlogPost::class);
     }
+
+    public function getNameAttribute()
+    {
+        $translation = $this->getTranslation(app()->getLocale());
+        return $translation ? $translation->name : null;
+    }
 }

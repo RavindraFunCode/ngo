@@ -10,34 +10,35 @@
                 <h4 class="card-title">Add Campaign</h4>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.campaigns.store') }}" method="POST" enctype="multipart/form-data">
+                <div id="alert-container"></div>
+                <form id="createForm" action="{{ route('admin.campaigns.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="slug" class="form-label">Slug</label>
-                            <input type="text" class="form-control" id="slug" name="slug" required>
+                            <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-control" id="status" name="status">
+                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select class="form-control" id="status" name="status" required>
                                 <option value="draft">Draft</option>
                                 <option value="published">Published</option>
-                                <option value="archived">Archived</option>
+                                <option value="completed">Completed</option>
                             </select>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label for="target_amount" class="form-label">Target Amount</label>
-                            <input type="number" step="0.01" class="form-control" id="target_amount" name="target_amount">
+                            <label for="target_amount" class="form-label">Target Amount <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" class="form-control" id="target_amount" name="target_amount" value="{{ old('target_amount') }}" required>
                         </div>
                         <div class="col-md-4">
                             <label for="start_date" class="form-label">Start Date</label>
-                            <input type="date" class="form-control" id="start_date" name="start_date">
+                            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date') }}">
                         </div>
                         <div class="col-md-4">
                             <label for="end_date" class="form-label">End Date</label>
-                            <input type="date" class="form-control" id="end_date" name="end_date">
+                            <input type="date" class="form-control" id="end_date" name="end_date" value="{{ old('end_date') }}">
                         </div>
                     </div>
                     <div class="mb-3">
@@ -64,8 +65,12 @@
                         @foreach($languages as $index => $language)
                         <div class="tab-pane {{ $index === 0 ? 'active' : '' }}" id="lang-{{ $language->code }}" role="tabpanel">
                             <div class="mb-3">
-                                <label class="form-label">Title</label>
-                                <input type="text" class="form-control" name="translations[{{ $language->code }}][title]">
+                                <label class="form-label">Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][title]" required maxlength="255">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Slug</label>
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][slug]" maxlength="255">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Short Description</label>
@@ -105,6 +110,49 @@
 <script>
     document.querySelectorAll('.editor').forEach(function(element) {
         CKEDITOR.replace(element);
+    });
+
+    $('#createForm').submit(function(e) {
+        e.preventDefault();
+        for (let instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+        var formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    window.location.href = response.redirect;
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr);
+                var alertHtml = '';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    var errors = xhr.responseJSON.errors;
+                    var errorHtml = '<ul>';
+                    $.each(errors, function(key, value) {
+                        errorHtml += '<li>' + value[0] + '</li>';
+                    });
+                    errorHtml += '</ul>';
+                    alertHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                        errorHtml +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                        '</div>';
+                } else {
+                     alertHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                        'An unexpected error occurred. Please check console for details.' +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                        '</div>';
+                }
+                $('#alert-container').html(alertHtml);
+                $('html, body').animate({ scrollTop: 0 }, 'slow');
+            }
+        });
     });
 </script>
 @endpush

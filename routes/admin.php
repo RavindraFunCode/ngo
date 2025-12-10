@@ -46,4 +46,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('contact-submissions', \App\Http\Controllers\Admin\ContactSubmissionController::class)->except(['create', 'store', 'edit']);
     Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
     Route::resource('permissions', \App\Http\Controllers\Admin\PermissionController::class);
+    Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class);
+    Route::resource('faq-categories', \App\Http\Controllers\Admin\FaqCategoryController::class);
 });

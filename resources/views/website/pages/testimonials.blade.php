@@ -29,54 +29,20 @@
     <section class="testimonial-two sec-padd-top">
         <div class="container"> 
             <div class="row masonary-layout">
+                @foreach($testimonials as $testimonial)
                 <div class="col-md-3 col-sm-4 col-xs-6">
                     <div class="single-testimonial center">
                         <figure class="img-box">
-                            <a href="#"><img src="{{ asset('website/images/team/1.png') }}" alt=""></a>
+                            <a href="#"><img src="{{ asset('uploads/' . $testimonial->image) }}" alt="{{ $testimonial->name }}"></a>
                         </figure>
                         <div class="content">
-                            <div class="text"><p> "Humanity has given me a chance to give back to society in a meaningful way. I am proud to be a volunteer." </p></div>
-                            <h4>Allen Duckeat</h4>
-                            <p class="author-title"><a href="#"> Newyork</a></p>
+                            <div class="text"><p> "{{ Str::limit($testimonial->content, 100) }}" </p></div>
+                            <h4>{{ $testimonial->name }}</h4>
+                            <p class="author-title"><a href="#"> {{ $testimonial->role }}</a></p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-4 col-xs-6">
-                    <div class="single-testimonial center">
-                        <figure class="img-box">
-                            <a href="#"><img src="{{ asset('website/images/team/2.png') }}" alt=""></a>
-                        </figure>
-                        <div class="content">
-                            <div class="text"><p> "The transparency and dedication of this NGO are commendable. I know my donations are reaching the right people." </p></div>
-                            <h4>Steve Bairstow </h4>
-                            <p class="author-title"><a href="#"> California</a></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-4 col-xs-6">
-                    <div class="single-testimonial center">
-                        <figure class="img-box">
-                            <a href="#"><img src="{{ asset('website/images/team/3.png') }}" alt=""></a>
-                        </figure>
-                        <div class="content">
-                            <div class="text"><p> "Seeing the smiles on the children's faces is the best reward. Thank you Humanity for this opportunity." </p></div>
-                            <h4>Sarah Jones</h4>
-                            <p class="author-title"><a href="#"> London</a></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-4 col-xs-6">
-                    <div class="single-testimonial center">
-                        <figure class="img-box">
-                            <a href="#"><img src="{{ asset('website/images/team/4.png') }}" alt=""></a>
-                        </figure>
-                        <div class="content">
-                            <div class="text"><p> "A truly inspiring organization. I highly recommend everyone to support their noble cause." </p></div>
-                            <h4>Don Flethcer</h4>
-                            <p class="author-title"><a href="#"> Detroit</a></p>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>

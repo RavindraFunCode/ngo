@@ -27,7 +27,7 @@ class BlogController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'slug' => 'required|unique:posts,slug',
+            'slug' => 'required|unique:posts,slug|max:255',
             'category_id' => 'required|exists:post_categories,id',
             'featured_image' => 'nullable|image|max:2048',
             'status' => 'required|in:draft,published',
@@ -83,7 +83,7 @@ class BlogController extends Controller
     public function update(Request $request, BlogPost $blog)
     {
         $request->validate([
-            'slug' => 'required|unique:posts,slug,' . $blog->id,
+            'slug' => 'required|unique:posts,slug,' . $blog->id . '|max:255',
             'category_id' => 'required|exists:post_categories,id',
             'featured_image' => 'nullable|image|max:2048',
             'status' => 'required|in:draft,published',

@@ -101,7 +101,7 @@
                                 <h4>Categories</h4>
                             </div>
                             <ul class="list">
-                                @foreach(\App\Models\BlogCategory::all() as $category)
+                                @foreach(\App\Models\Category::all() as $category)
                                     <li><a href="#">{{ $category->name }}</a></li>
                                 @endforeach
                             </ul>

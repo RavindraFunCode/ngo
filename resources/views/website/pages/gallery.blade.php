@@ -33,112 +33,32 @@
                     <li class="active" data-filter=".filter-item">
                         <span>View All</span>
                     </li>
-                    <li data-filter=".humanity">
-                        <span>Humanity</span>
+                    @foreach($categories as $category)
+                    <li data-filter=".{{ \Illuminate\Support\Str::slug($category) }}">
+                        <span>{{ $category }}</span>
                     </li>
-                    <li data-filter=".Children">
-                        <span>Children</span>
-                    </li>
-                    <li data-filter=".Donate">
-                        <span>Donate</span>
-                    </li>
-                    <li data-filter=".Volunteer">
-                        <span>Volunteer</span>
-                    </li>
+                    @endforeach
                 </ul>
             </div>            
 
             <div class="row filter-layout">
-                <article class="col-md-4 col-sm-6 col-xs-12 filter-item Children">
+                @foreach($galleryItems as $item)
+                <article class="col-md-4 col-sm-6 col-xs-12 filter-item {{ \Illuminate\Support\Str::slug($item->category) }}">
                     <div class="item">
-                        <img src="{{ asset('website/images/project/1.jpg') }}" alt="">
+                        <img src="{{ asset('uploads/' . $item->image) }}" alt="{{ $item->title }}">
                         <div class="overlay">
                             <div class="top">
                                 <div class="box">
                                     <div class="content">
-                                        <a data-group="1" href="{{ asset('website/images/project/1.jpg') }}" class="img-popup thm-btn">view project</a>
+                                        <a data-group="1" href="{{ asset('uploads/' . $item->image) }}" class="img-popup thm-btn">view project</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="bottom"><a href="#"><h4>Clean poor urban areas to protect <br>from pollution.</h4></a></div>
+                            <div class="bottom"><a href="#"><h4>{!! nl2br(e($item->title)) !!}</h4></a></div>
                         </div>
                     </div>
                 </article> 
-                <article class="col-md-4 col-sm-6 col-xs-12 filter-item Donate">
-                    <div class="item">
-                        <img src="{{ asset('website/images/project/2.jpg') }}" alt="">
-                        <div class="overlay">
-                            <div class="top">
-                                <div class="box">
-                                    <div class="content">
-                                        <a data-group="1" href="{{ asset('website/images/project/2.jpg') }}" class="img-popup thm-btn">view project</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bottom"><a href="#"><h4>Clean poor urban areas to protect <br>from pollution.</h4></a></div>
-                        </div>
-                    </div>
-                </article> 
-                <article class="col-md-4 col-sm-6 col-xs-12 filter-item humanity">
-                    <div class="item">
-                        <img src="{{ asset('website/images/project/3.jpg') }}" alt="">
-                        <div class="overlay">
-                            <div class="top">
-                                <div class="box">
-                                    <div class="content">
-                                        <a data-group="1" href="{{ asset('website/images/project/3.jpg') }}" class="img-popup thm-btn">view project</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bottom"><a href="#"><h4>Clean poor urban areas to protect <br>from pollution.</h4></a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-md-4 col-sm-6 col-xs-12 filter-item Volunteer">
-                    <div class="item">
-                        <img src="{{ asset('website/images/project/4.jpg') }}" alt="">
-                        <div class="overlay">
-                            <div class="top">
-                                <div class="box">
-                                    <div class="content">
-                                        <a data-group="1" href="{{ asset('website/images/project/4.jpg') }}" class="img-popup thm-btn">view project</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bottom"><a href="#"><h4>Clean poor urban areas to protect <br>from pollution.</h4></a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-md-4 col-sm-6 col-xs-12 filter-item humanity Donate">
-                    <div class="item">
-                        <img src="{{ asset('website/images/project/5.jpg') }}" alt="">
-                        <div class="overlay">
-                            <div class="top">
-                                <div class="box">
-                                    <div class="content">
-                                        <a data-group="1" href="{{ asset('website/images/project/5.jpg') }}" class="img-popup thm-btn">view project</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bottom"><a href="#"><h4>Clean poor urban areas to protect <br>from pollution.</h4></a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-md-4 col-sm-6 col-xs-12 filter-item Children">
-                    <div class="item">
-                        <img src="{{ asset('website/images/project/6.jpg') }}" alt="">
-                        <div class="overlay">
-                            <div class="top">
-                                <div class="box">
-                                    <div class="content">
-                                        <a data-group="1" href="{{ asset('website/images/project/6.jpg') }}" class="img-popup thm-btn">view project</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bottom"><a href="#"><h4>Clean poor urban areas to protect <br>from pollution.</h4></a></div>
-                        </div>
-                    </div>
-                </article>
+                @endforeach
             </div>
         </div>
     </section>

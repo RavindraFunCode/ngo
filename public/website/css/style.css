@@ -5082,7 +5082,8 @@ input,textarea {font-family: 'Roboto', sans-serif;display: block; font-size: 16p
   display: block;
 }
 
-.faq-section .category-style-one ul li a:hover {
+.faq-section .category-style-one ul li a:hover,
+.faq-section .category-style-one ul li a.active {
   color: #ff5722;
   transition: .5s ease;
 }

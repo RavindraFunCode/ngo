@@ -1,14 +1,12 @@
 @extends('layouts.admin')
 
-@section('title', 'Categories')
-
 @section('content')
 <div class="row">
-    <div class="col-12">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="card-title">Categories</h4>
-                <a href="{{ route('admin.blog.categories.create') }}" class="btn btn-primary">Add Category</a>
+                <h4 class="card-title">FAQs</h4>
+                <a href="{{ route('admin.faqs.create') }}" class="btn btn-primary">Add FAQ</a>
             </div>
             <div class="card-body">
                 <div id="alert-container"></div>
@@ -16,39 +14,8 @@
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
 
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name (Default)</th>
-                                <th>Slug</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($categories as $category)
-                            <tr id="row-{{ $category->id }}">
-                                <td>{{ $category->getTranslation(app()->getLocale())->name ?? $category->getTranslation('en')->name ?? 'N/A' }}</td>
-                                <td>{{ $category->slug }}</td>
-                                <td>
-                                    @if($category->is_active)
-                                        <span class="badge bg-success">Active</span>
-                                    @else
-                                        <span class="badge bg-secondary">Inactive</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="{{ route('admin.blog.categories.edit', $category) }}" class="btn btn-sm btn-info">Edit</a>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{{ route('admin.blog.categories.destroy', $category) }}', {{ $category->id }})">Delete</button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-3">
-                    {{ $categories->links() }}
+                <div id="table-container">
+                    @include('admin.faqs.partials.table')
                 </div>
             </div>
         </div>
@@ -64,7 +31,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this category?
+                Are you sure you want to delete this FAQ?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -100,7 +67,7 @@
             success: function(response) {
                 $('#deleteModal').modal('hide');
                 $('#row-' + deleteRowId).remove();
-                showAlert('success', 'Category deleted successfully');
+                showAlert('success', 'FAQ deleted successfully');
             },
             error: function(xhr) {
                 $('#deleteModal').modal('hide');
@@ -115,6 +82,23 @@
             '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
             '</div>';
         $('#alert-container').html(alertHtml);
+    }
+
+    // AJAX Pagination
+    $(document).on('click', '.pagination a', function(event) {
+        event.preventDefault();
+        var page = $(this).attr('href').split('page=')[1];
+        fetch_data(page);
+    });
+
+    function fetch_data(page) {
+        $.ajax({
+            url: "{{ route('admin.faqs.index') }}?page=" + page,
+            success: function(data) {
+                $('#table-container').html(data);
+                window.history.pushState("", "", "{{ route('admin.faqs.index') }}?page=" + page);
+            }
+        });
     }
 </script>
 @endpush

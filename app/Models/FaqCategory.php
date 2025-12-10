@@ -5,33 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Campaign extends Model
+class FaqCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'slug',
-        'status',
-        'target_amount',
-        'raised_amount',
-        'currency',
-        'start_date',
-        'end_date',
-        'featured_image',
-        'is_featured',
-        'created_by',
-        'updated_by'
-    ];
+    protected $fillable = ['is_active', 'order'];
 
     protected $casts = [
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
-        'is_featured' => 'boolean',
+        'is_active' => 'boolean',
+        'order' => 'integer',
     ];
 
     public function translations()
     {
-        return $this->hasMany(CampaignTranslation::class);
+        return $this->hasMany(FaqCategoryTranslation::class);
+    }
+
+    public function faqs()
+    {
+        return $this->hasMany(Faq::class);
     }
 
     public function getTranslation($locale)
@@ -45,10 +37,5 @@ class Campaign extends Model
         if (!$languageId) return null;
 
         return $this->translations->where('language_id', $languageId)->first();
-    }
-
-    public function donations()
-    {
-        return $this->hasMany(Donation::class);
     }
 }

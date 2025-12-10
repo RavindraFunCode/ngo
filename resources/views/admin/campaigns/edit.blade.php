@@ -10,46 +10,52 @@
                 <h4 class="card-title">Edit Campaign</h4>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.campaigns.update', $campaign) }}" method="POST" enctype="multipart/form-data">
+                <div id="alert-container"></div>
+                <form id="editForm" action="{{ route('admin.campaigns.update', $campaign) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="slug" class="form-label">Slug</label>
-                            <input type="text" class="form-control" id="slug" name="slug" value="{{ $campaign->slug }}" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-control" id="status" name="status">
-                                <option value="draft" {{ $campaign->status == 'draft' ? 'selected' : '' }}>Draft</option>
-                                <option value="published" {{ $campaign->status == 'published' ? 'selected' : '' }}>Published</option>
-                                <option value="archived" {{ $campaign->status == 'archived' ? 'selected' : '' }}>Archived</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="target_amount" class="form-label">Target Amount</label>
-                            <input type="number" step="0.01" class="form-control" id="target_amount" name="target_amount" value="{{ $campaign->target_amount }}">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="start_date" class="form-label">Start Date</label>
-                            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $campaign->start_date ? $campaign->start_date->format('Y-m-d') : '' }}">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="end_date" class="form-label">End Date</label>
-                            <input type="date" class="form-control" id="end_date" name="end_date" value="{{ $campaign->end_date ? $campaign->end_date->format('Y-m-d') : '' }}">
-                        </div>
-                    </div>
                     <div class="mb-3">
-                        <label for="featured_image" class="form-label">Featured Image</label>
-                        <input type="file" class="form-control" id="featured_image" name="featured_image">
+                        <label class="form-label">Slug <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="slug" value="{{ old('slug', $campaign->slug) }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Status <span class="text-danger">*</span></label>
+                        <select class="form-control" name="status" required>
+                            <option value="draft" {{ $campaign->status == 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="published" {{ $campaign->status == 'published' ? 'selected' : '' }}>Published</option>
+                            <option value="archived" {{ $campaign->status == 'archived' ? 'selected' : '' }}>Archived</option>
+                            <option value="completed" {{ $campaign->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Target Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" class="form-control" name="target_amount" value="{{ old('target_amount', $campaign->target_amount) }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-control" name="start_date" value="{{ old('start_date', $campaign->start_date ? $campaign->start_date->format('Y-m-d') : '') }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">End Date</label>
+                        <input type="date" class="form-control" name="end_date" value="{{ old('end_date', $campaign->end_date ? $campaign->end_date->format('Y-m-d') : '') }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Featured Image</label>
+                        <input type="file" class="form-control" name="featured_image">
                         @if($campaign->featured_image)
-                            <img src="{{ Storage::url($campaign->featured_image) }}" alt="Current Image" class="mt-2" style="height: 100px;">
+                            <div class="mt-2">
+                                <img src="{{ Storage::url($campaign->featured_image) }}" width="100" alt="Featured Image">
+                            </div>
                         @endif
                     </div>
+
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="is_featured" name="is_featured" {{ $campaign->is_featured ? 'checked' : '' }}>
+                        <input type="checkbox" class="form-check-input" name="is_featured" id="is_featured" {{ $campaign->is_featured ? 'checked' : '' }}>
                         <label class="form-check-label" for="is_featured">Is Featured</label>
                     </div>
 
@@ -71,8 +77,8 @@
                         @endphp
                         <div class="tab-pane {{ $index === 0 ? 'active' : '' }}" id="lang-{{ $language->code }}" role="tabpanel">
                             <div class="mb-3">
-                                <label class="form-label">Title</label>
-                                <input type="text" class="form-control" name="translations[{{ $language->code }}][title]" value="{{ $translation->title ?? '' }}">
+                                <label class="form-label">Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][title]" value="{{ $translation->title ?? '' }}" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Short Description</label>
@@ -112,6 +118,49 @@
 <script>
     document.querySelectorAll('.editor').forEach(function(element) {
         CKEDITOR.replace(element);
+    });
+
+    $('#editForm').submit(function(e) {
+        e.preventDefault();
+        for (let instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+        var formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    window.location.href = response.redirect;
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr);
+                var alertHtml = '';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    var errors = xhr.responseJSON.errors;
+                    var errorHtml = '<ul>';
+                    $.each(errors, function(key, value) {
+                        errorHtml += '<li>' + value[0] + '</li>';
+                    });
+                    errorHtml += '</ul>';
+                    alertHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                        errorHtml +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                        '</div>';
+                } else {
+                     alertHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                        'An unexpected error occurred. Please check console for details.' +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                        '</div>';
+                }
+                $('#alert-container').html(alertHtml);
+                $('html, body').animate({ scrollTop: 0 }, 'slow');
+            }
+        });
     });
 </script>
 @endpush

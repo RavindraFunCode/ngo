@@ -68,15 +68,15 @@
                     @csrf
                     <input type="hidden" id="testimonialId" name="id">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" maxlength="255" required>
                     </div>
                     <div class="mb-3">
-                        <label for="content" class="form-label">Content</label>
+                        <label for="content" class="form-label">Content <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="image" class="form-label">Image</label>
+                        <label for="image" class="form-label">Image <span class="text-danger">*</span></label>
                         <input type="file" class="form-control" id="image" name="image">
                         <div id="imagePreview" class="mt-2"></div>
                     </div>
@@ -94,10 +94,31 @@
     </div>
 </div>
 
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this testimonial?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
 <script>
+    let deleteTestimonialId = null;
+
     function resetForm() {
         $('#testimonialForm')[0].reset();
         $('#testimonialId').val('');
@@ -142,11 +163,14 @@
                 location.reload(); 
             },
             error: function(xhr) {
-                var errors = xhr.responseJSON.errors;
                 var errorHtml = '<div class="alert alert-danger"><ul>';
-                $.each(errors, function(key, value) {
-                    errorHtml += '<li>' + value + '</li>';
-                });
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        errorHtml += '<li>' + value + '</li>';
+                    });
+                } else {
+                    errorHtml += '<li>' + (xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred. Please try again.') + '</li>';
+                }
                 errorHtml += '</ul></div>';
                 $('#modal-alert-container').html(errorHtml);
             }
@@ -154,19 +178,30 @@
     }
 
     function deleteTestimonial(id) {
-        if (confirm('Are you sure?')) {
-            $.ajax({
-                url: '/admin/testimonials/' + id,
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#testimonial-' + id).remove();
-                    showAlert('success', response.success);
-                }
-            });
-        }
+        deleteTestimonialId = id;
+        $('#deleteModal').modal('show');
+    }
+
+    function confirmDelete() {
+        if (!deleteTestimonialId) return;
+
+        $.ajax({
+            url: '/admin/testimonials/' + deleteTestimonialId,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE'
+            },
+            success: function(response) {
+                $('#deleteModal').modal('hide');
+                $('#testimonial-' + deleteTestimonialId).remove();
+                showAlert('success', response.success);
+            },
+            error: function(xhr) {
+                $('#deleteModal').modal('hide');
+                alert('Error: ' + (xhr.responseJSON ? xhr.responseJSON.message : 'Something went wrong.'));
+            }
+        });
     }
 
     function showAlert(type, message) {

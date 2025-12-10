@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\FaqCategory;
 use App\Models\Page;
 use App\Models\Campaign;
 use App\Models\BlogPost;
@@ -69,19 +70,36 @@ class WebsiteController extends Controller
         return view('website.pages.team');
     }
 
-    public function faq()
+    public function faq(Request $request)
     {
-        return view('website.pages.faq');
+        $categories = \App\Models\FaqCategory::where('is_active', true)->withCount(['faqs' => function($query) {
+            $query->where('is_active', true);
+        }])->with('translations')->orderBy('order')->get();
+
+        $query = \App\Models\Faq::where('is_active', true)->with('translations')->orderBy('order');
+
+        if ($request->has('category')) {
+            $categorySlug = $request->category;
+            $query->whereHas('category.translations', function($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug);
+            });
+        }
+
+        $faqs = $query->get();
+        return view('website.pages.faq', compact('faqs', 'categories'));
     }
 
     public function testimonials()
     {
-        return view('website.pages.testimonials');
+        $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
+        return view('website.pages.testimonials', compact('testimonials'));
     }
 
     public function gallery()
     {
-        return view('website.pages.gallery');
+        $galleryItems = \App\Models\GalleryItem::where('is_active', true)->latest()->get();
+        $categories = $galleryItems->pluck('category')->unique();
+        return view('website.pages.gallery', compact('galleryItems', 'categories'));
     }
 
     public function partner()

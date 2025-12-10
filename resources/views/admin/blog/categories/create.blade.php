@@ -13,8 +13,8 @@
                 <form action="{{ route('admin.blog.categories.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="slug" class="form-label">Slug</label>
-                        <input type="text" class="form-control" id="slug" name="slug" required>
+                        <label class="form-label">Slug <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="slug" value="{{ old('slug') }}" required maxlength="255">
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="is_active" name="is_active" checked>
@@ -36,12 +36,12 @@
                         @foreach($languages as $index => $language)
                         <div class="tab-pane {{ $index === 0 ? 'active' : '' }}" id="lang-{{ $language->code }}" role="tabpanel">
                             <div class="mb-3">
-                                <label class="form-label">Name</label>
-                                <input type="text" class="form-control" name="translations[{{ $language->code }}][name]">
+                                <label class="form-label">Name ({{ $language->code }}) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][name]" required maxlength="255">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Slug</label>
-                                <input type="text" class="form-control" name="translations[{{ $language->code }}][slug]">
+                                <input type="text" class="form-control" name="translations[{{ $language->code }}][slug]" maxlength="255">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Description</label>
