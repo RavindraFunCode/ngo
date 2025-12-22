@@ -24,6 +24,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('languages', \App\Http\Controllers\Admin\LanguageController::class);
     Route::get('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
     Route::post('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
+    Route::resource('countries', \App\Http\Controllers\Admin\CountryController::class);
+    Route::delete('media/bulk-delete', [\App\Http\Controllers\Admin\MediaController::class, 'bulkDestroy'])->name('media.bulk-delete');
     Route::resource('media', \App\Http\Controllers\Admin\MediaController::class)->only(['index', 'store', 'destroy']);
     Route::resource('pages', \App\Http\Controllers\Admin\PageController::class);
     Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class);

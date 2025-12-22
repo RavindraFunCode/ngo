@@ -31,14 +31,14 @@
                                     {{ $donation->donor_name }}<br>
                                     <small class="text-muted">{{ $donation->donor_email }}</small>
                                 </td>
-                                <td>{{ $donation->campaign->getTranslation(app()->getLocale())->title ?? 'N/A' }}</td>
+                                <td>{{ $donation->campaign ? ($donation->campaign->getTranslation(app()->getLocale())->title ?? 'N/A') : 'General Component' }}</td>
                                 <td>{{ $donation->currency }} {{ number_format($donation->amount, 2) }}</td>
                                 <td>
                                     <span class="badge bg-{{ $donation->status == 'paid' ? 'success' : ($donation->status == 'pending' ? 'warning' : 'danger') }}">
                                         {{ ucfirst($donation->status) }}
                                     </span>
                                 </td>
-                                <td>{{ $donation->created_at->format('Y-m-d H:i') }}</td>
+                                <td>{{ $donation->created_at->format('d/m/Y H:i') }}</td>
                                 <td>
                                     <a href="{{ route('admin.donations.show', $donation) }}" class="btn btn-sm btn-info">View</a>
                                 </td>

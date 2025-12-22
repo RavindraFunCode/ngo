@@ -54,7 +54,19 @@
             </div>  
             
             <div class="default-form-area">
-                <form id="volunteer-form" name="volunteer_form" class="default-form" action="#" method="post">
+                @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <form id="volunteer-form" name="volunteer_form" class="default-form" action="{{ route('volunteer.store') }}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -62,36 +74,36 @@
                                 <div class="row clearfix">
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group">
-                                            <input type="text" name="name" class="form-control" value="" placeholder="Your Name *" required="">
+                                            <input type="text" name="name" class="form-control" value="{{ old('name') }}" placeholder="Your Name *" required="">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group">
-                                            <input type="text" name="nationality" class="form-control" value="" placeholder="Nationality" required="">
+                                            <input type="text" name="nationality" class="form-control" value="{{ old('nationality') }}" placeholder="Nationality" required="">
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-group">
-                                            <input type="text" name="address" class="form-control" value="" placeholder="Address (Including Postcode)">
+                                            <input type="text" name="address" class="form-control" value="{{ old('address') }}" placeholder="Address (Including Postcode)">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group">
-                                            <input type="text" name="phone" class="form-control" value="" placeholder="Phn Num">
+                                            <input type="text" name="phone" class="form-control" value="{{ old('phone') }}" placeholder="Phn Num">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group">
-                                            <input type="email" name="email" class="form-control required email" value="" placeholder="Email Id *" required="">
+                                            <input type="email" name="email" class="form-control required email" value="{{ old('email') }}" placeholder="Email Id *" required="">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group">
                                             <div class="select-box">
                                                 <select class="text-capitalize selectpicker form-control required" name="gender" data-style="g-select" data-width="100%">
-                                                    <option value="" selected="">Gender</option>
-                                                    <option value="Male">Male</option>
-                                                    <option value="Female">Female</option>
+                                                    <option value="" disabled {{ old('gender') ? '' : 'selected' }}>Gender</option>
+                                                    <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                                                    <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
                                                 </select>
                                             </div>      
                                         </div>
@@ -100,11 +112,11 @@
                                         <div class="form-group">
                                             <div class="select-box">
                                                 <select class="text-capitalize selectpicker form-control required" name="age_group" data-style="g-select" data-width="100%">
-                                                    <option value="" selected="">Age</option>
-                                                    <option value="<20">Lessthan 20</option>
-                                                    <option value="20-30">Between 20 to 30</option>
-                                                    <option value="31-40">Between 31 to 40</option>
-                                                    <option value=">40">Above 40</option>
+                                                    <option value="" disabled {{ old('age_group') ? '' : 'selected' }}>Age</option>
+                                                    <option value="<20" {{ old('age_group') == '<20' ? 'selected' : '' }}>Lessthan 20</option>
+                                                    <option value="20-30" {{ old('age_group') == '20-30' ? 'selected' : '' }}>Between 20 to 30</option>
+                                                    <option value="31-40" {{ old('age_group') == '31-40' ? 'selected' : '' }}>Between 31 to 40</option>
+                                                    <option value=">40" {{ old('age_group') == '>40' ? 'selected' : '' }}>Above 40</option>
                                                 </select>
                                             </div>      
                                         </div>
@@ -119,10 +131,10 @@
                                         <div class="form-group">
                                             <div class="select-box">
                                                 <select class="text-capitalize selectpicker form-control required" name="availability" data-style="g-select" data-width="100%">
-                                                    <option value="" selected="">Your Availability</option>
-                                                    <option value="Weekends">Weekends</option>
-                                                    <option value="Weekdays">Weekdays</option>
-                                                    <option value="Full Time">Full Time</option>
+                                                    <option value="" disabled {{ old('availability') ? '' : 'selected' }}>Your Availability</option>
+                                                    <option value="Weekends" {{ old('availability') == 'Weekends' ? 'selected' : '' }}>Weekends</option>
+                                                    <option value="Weekdays" {{ old('availability') == 'Weekdays' ? 'selected' : '' }}>Weekdays</option>
+                                                    <option value="Full Time" {{ old('availability') == 'Full Time' ? 'selected' : '' }}>Full Time</option>
                                                 </select>
                                             </div>      
                                         </div>
@@ -131,17 +143,17 @@
                                         <div class="form-group">
                                             <div class="select-box">
                                                 <select class="text-capitalize selectpicker form-control required" name="interest" data-style="g-select" data-width="100%">
-                                                    <option value="" selected="">What Would You Like to do?</option>
-                                                    <option value="Teaching">Teaching</option>
-                                                    <option value="Fundraising">Fundraising</option>
-                                                    <option value="Event Management">Event Management</option>
+                                                    <option value="" disabled {{ old('interest') ? '' : 'selected' }}>What Would You Like to do?</option>
+                                                    <option value="Teaching" {{ old('interest') == 'Teaching' ? 'selected' : '' }}>Teaching</option>
+                                                    <option value="Fundraising" {{ old('interest') == 'Fundraising' ? 'selected' : '' }}>Fundraising</option>
+                                                    <option value="Event Management" {{ old('interest') == 'Event Management' ? 'selected' : '' }}>Event Management</option>
                                                 </select>
                                             </div>      
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-group">
-                                            <textarea name="experience" class="form-control textarea required" placeholder="Experience, Learning and Skills..."></textarea>
+                                            <textarea name="experience" class="form-control textarea required" placeholder="Experience, Learning and Skills...">{{ old('experience') }}</textarea>
                                         </div>
                                     </div> 
                                 </div>
@@ -150,7 +162,7 @@
                     </div>
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="form-group center">
-                            <button class="thm-btn" type="submit" data-loading-text="Please wait...">submit now</button>
+                            <button class="thm-btn" type="submit">submit now</button>
                         </div>
                     </div>   
                 </form>

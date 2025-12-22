@@ -14,8 +14,18 @@ class DonationController extends Controller
             $amount = $request->input('custom_amount');
         }
 
+        $currencyCode = $request->input('currency', 'USD');
+        $currencySymbol = '$';
+        
+        $country = \App\Models\Country::where('currency_code', $currencyCode)->first();
+        if ($country) {
+            $currencySymbol = $country->currency_symbol;
+        }
+
         $data = [
             'amount' => $amount,
+            'currency' => $currencyCode,
+            'currency_symbol' => $currencySymbol,
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'address' => $request->input('address'),
@@ -32,7 +42,18 @@ class DonationController extends Controller
         $success = true; // Simulate success
 
         if ($success) {
-            // Logic to save donation to database would go here
+            $donation = new \App\Models\Donation();
+            $donation->amount = $request->input('amount');
+            $donation->donor_name = $request->input('name');
+            $donation->donor_email = $request->input('email');
+            $donation->donor_phone = $request->input('phone');
+            $donation->donor_address = $request->input('address');
+            $donation->payment_gateway = $request->input('payment_method');
+            $donation->currency = $request->input('currency', 'USD');
+            $donation->status = 'paid'; // Default status for now
+            $donation->paid_at = now();
+            $donation->save();
+
             return redirect()->route('donation.thank-you');
         } else {
             return redirect()->route('donation.failed');

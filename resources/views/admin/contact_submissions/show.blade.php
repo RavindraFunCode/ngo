@@ -15,7 +15,7 @@
             <div class="card-body">
                 <p><strong>From:</strong> {{ $contactSubmission->name }} &lt;{{ $contactSubmission->email }}&gt;</p>
                 <p><strong>Phone:</strong> {{ $contactSubmission->phone ?? 'N/A' }}</p>
-                <p><strong>Date:</strong> {{ $contactSubmission->created_at->format('Y-m-d H:i:s') }}</p>
+                <p><strong>Date:</strong> {{ $contactSubmission->created_at->format('d/m/Y H:i:s') }}</p>
                 <hr>
                 <p class="lead">{{ $contactSubmission->message }}</p>
                 
@@ -50,7 +50,7 @@
                 <p><strong>User Agent:</strong> {{ $contactSubmission->user_agent ?? 'N/A' }}</p>
                 @if($contactSubmission->handled_by)
                     <p><strong>Handled By:</strong> {{ $contactSubmission->handler->name ?? 'Unknown' }}</p>
-                    <p><strong>Handled At:</strong> {{ $contactSubmission->handled_at->format('Y-m-d H:i') }}</p>
+                    <p><strong>Handled At:</strong> {{ $contactSubmission->handled_at->format('d/m/Y H:i') }}</p>
                 @endif
             </div>
         </div>

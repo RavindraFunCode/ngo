@@ -25,7 +25,7 @@
                     </tr>
                     <tr>
                         <th>Campaign</th>
-                        <td>{{ $donation->campaign->getTranslation(app()->getLocale())->title ?? 'N/A' }}</td>
+                        <td>{{ $donation->campaign ? ($donation->campaign->getTranslation(app()->getLocale())->title ?? 'N/A') : 'General Component' }}</td>
                     </tr>
                     <tr>
                         <th>Transaction ID</th>
@@ -37,7 +37,7 @@
                     </tr>
                     <tr>
                         <th>Date</th>
-                        <td>{{ $donation->created_at->format('Y-m-d H:i:s') }}</td>
+                        <td>{{ $donation->created_at->format('d/m/Y H:i:s') }}</td>
                     </tr>
                 </table>
             </div>

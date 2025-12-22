@@ -33,37 +33,49 @@
                         <h2>Send Your <span class="thm-color">Message</span></h2>
                     </div>
                     <div class="default-form-area">
-                        <form id="contact-form" name="contact_form" class="default-form" action="#" method="post">
+                        @if(session('success'))
+                            <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
+                        @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        <form id="contact-form" name="contact_form" class="default-form" action="{{ route('contact.store') }}" method="post">
                             @csrf
                             <div class="row clearfix">
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <input type="text" name="name" class="form-control" value="" placeholder="Your Name *" required="">
+                                        <input type="text" name="name" class="form-control" value="{{ old('name') }}" placeholder="Your Name *" required="">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <input type="email" name="email" class="form-control required email" value="" placeholder="Your Mail *" required="">
+                                        <input type="email" name="email" class="form-control required email" value="{{ old('email') }}" placeholder="Your Mail *" required="">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <input type="text" name="phone" class="form-control" value="" placeholder="Phone">
+                                        <input type="text" name="phone" class="form-control" value="{{ old('phone') }}" placeholder="Phone">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <input type="text" name="subject" class="form-control" value="" placeholder="Subject">
+                                        <input type="text" name="subject" class="form-control" value="{{ old('subject') }}" placeholder="Subject">
                                     </div>
                                 </div>   
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group">
-                                        <textarea name="message" class="form-control textarea required" placeholder="Your Message...."></textarea>
+                                        <textarea name="message" class="form-control textarea required" placeholder="Your Message....">{{ old('message') }}</textarea>
                                     </div>
                                 </div>   
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group">
-                                        <button class="thm-btn" type="submit" data-loading-text="Please wait...">send message</button>
+                                        <button class="thm-btn" type="submit">send message</button>
                                     </div>
                                 </div>   
                             </div>

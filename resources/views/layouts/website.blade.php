@@ -204,6 +204,7 @@
     <script src="{{ asset('website/js/jquery.bootstrap-touchspin.js') }}"></script>
     <script src="{{ asset('website/js/jquery.countdown.min.js') }}"></script>
     <script src="{{ asset('website/js/validation.js') }}"></script>
+    <script src="{{ asset('website/js/bootstrap-select.min.js') }}"></script>
     @stack('scripts')
     <script src="{{ asset('website/js/custom.js') }}"></script>
 </body>

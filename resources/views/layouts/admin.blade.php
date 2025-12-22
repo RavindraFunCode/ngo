@@ -8,7 +8,9 @@
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <meta name="description" content="NGO Admin Dashboard" />
      <meta name="author" content="Techzaa" />
+     <meta name="author" content="Techzaa" />
      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+     <meta name="csrf-token" content="{{ csrf_token() }}">
 
      <!-- App favicon -->
      <link rel="shortcut icon" href="{{ asset('assets/admin/images/favicon.ico') }}">
@@ -138,14 +140,14 @@
                                 <span class="nav-text"> Features </span>
                             </a>
                         </li>
-                         <li class="nav-item">
+                         {{-- <li class="nav-item">
                               <a class="nav-link" href="{{ route('admin.pages.index') }}">
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
                                    </span>
                                    <span class="nav-text"> Pages </span>
                               </a>
-                         </li>
+                         </li> --}}
 
                          <li class="nav-item">
                               <a class="nav-link collapsed" data-bs-target="#blog-nav" data-bs-toggle="collapse" href="#">
@@ -170,14 +172,14 @@
                               </ul>
                          </li>
 
-                         <li class="nav-item">
+                         {{-- <li class="nav-item">
                               <a class="nav-link" href="{{ route('admin.menus.index') }}">
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:hamburger-menu-bold-duotone"></iconify-icon>
                                    </span>
                                    <span class="nav-text"> Menus </span>
                               </a>
-                         </li>
+                         </li> --}}
 
                          <li class="nav-item">
                               <a class="nav-link collapsed" data-bs-target="#homepage-nav" data-bs-toggle="collapse" href="#">
@@ -281,6 +283,15 @@
 
 
                          <li class="menu-title">System</li>
+
+                         <li class="nav-item">
+                              <a class="nav-link" href="{{ route('admin.countries.index') }}">
+                                   <span class="nav-icon">
+                                        <iconify-icon icon="solar:globus-bold-duotone"></iconify-icon>
+                                   </span>
+                                   <span class="nav-text"> Countries </span>
+                              </a>
+                         </li>
 
                          <li class="nav-item">
                               <a class="nav-link" href="{{ route('admin.media.index') }}">

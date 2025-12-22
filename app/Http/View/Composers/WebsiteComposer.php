@@ -31,8 +31,16 @@ class WebsiteComposer
         // Fetch all settings
         $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
 
+        // Fetch active countries
+        $activeCountries = \App\Models\Country::where('is_active', true)
+            ->whereNotNull('currency_code')
+            ->whereNotNull('currency_symbol')
+            ->orderBy('name')
+            ->get();
+
         $view->with('mainMenu', $menuItems);
         $view->with('currentLanguageId', $languageId);
         $view->with('settings', $settings);
+        $view->with('activeCountries', $activeCountries);
     }
 }

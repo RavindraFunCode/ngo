@@ -34,7 +34,7 @@
                                         {{ ucfirst(str_replace('_', ' ', $submission->status)) }}
                                     </span>
                                 </td>
-                                <td>{{ $submission->created_at->format('Y-m-d H:i') }}</td>
+                                <td>{{ $submission->created_at->format('d/m/Y H:i') }}</td>
                                 <td>
                                     <a href="{{ route('admin.contact-submissions.show', $submission) }}" class="btn btn-sm btn-info">View</a>
                                     <form action="{{ route('admin.contact-submissions.destroy', $submission) }}" method="POST" class="d-inline">

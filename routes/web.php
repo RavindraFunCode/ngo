@@ -9,7 +9,9 @@ Route::get('/campaigns/{slug}', [\App\Http\Controllers\WebsiteController::class,
 Route::get('/blog', [\App\Http\Controllers\WebsiteController::class, 'blog'])->name('blog.index');
 Route::get('/blog/{slug}', [\App\Http\Controllers\WebsiteController::class, 'blogShow'])->name('blog.show');
 Route::get('/contact-us', [\App\Http\Controllers\WebsiteController::class, 'contact'])->name('contact');
+Route::post('/contact-us', [\App\Http\Controllers\WebsiteController::class, 'storeContact'])->name('contact.store');
 Route::get('/volunteer', [\App\Http\Controllers\WebsiteController::class, 'volunteer'])->name('volunteer');
+Route::post('/volunteer', [\App\Http\Controllers\WebsiteController::class, 'storeVolunteer'])->name('volunteer.store');
 Route::get('/team', [\App\Http\Controllers\WebsiteController::class, 'team'])->name('team');
 Route::get('/faq', [\App\Http\Controllers\WebsiteController::class, 'faq'])->name('faq');
 Route::get('/testimonials', [\App\Http\Controllers\WebsiteController::class, 'testimonials'])->name('testimonials');
@@ -31,3 +33,5 @@ Route::get('lang/{locale}', function ($locale) {
     }
     return redirect()->back();
 })->name('lang.switch');
+
+

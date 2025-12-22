@@ -61,7 +61,7 @@
                 @endforeach
             </div>
             <div class="center">
-                {{ $posts->links() }}
+                {{ $posts->links('vendor.pagination.website') }}
             </div>
         </div>
     </section>

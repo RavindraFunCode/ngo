@@ -52,6 +52,17 @@
                                 <label class="form-label">Tagline</label>
                                 <input type="text" class="form-control" name="site_tagline" value="{{ $settings['general']->where('key', 'site_tagline')->first()->value ?? '' }}">
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label">Default Country</label>
+                                <select class="form-control" name="default_country">
+                                    <option value="">Select Country</option>
+                                    @foreach(\App\Models\Country::where('is_active', true)->get() as $country)
+                                        <option value="{{ $country->id }}" {{ ($settings['general']->where('key', 'default_country')->first()->value ?? '') == $country->id ? 'selected' : '' }}>
+                                            {{ $country->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         <div class="tab-pane" id="contact" role="tabpanel">
                             <div class="mb-3">

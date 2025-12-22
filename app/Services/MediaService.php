@@ -27,7 +27,7 @@ class MediaService
 
     public function delete(Media $media)
     {
-        if (Storage::disk($media->disk)->exists($media->path)) {
+        if (!empty($media->path) && Storage::disk($media->disk)->exists($media->path)) {
             Storage::disk($media->disk)->delete($media->path);
         }
 

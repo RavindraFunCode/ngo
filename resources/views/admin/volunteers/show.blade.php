@@ -27,6 +27,18 @@
                         <td>{{ $volunteer->address }}</td>
                     </tr>
                     <tr>
+                        <th>Nationality</th>
+                        <td>{{ $volunteer->nationality }}</td>
+                    </tr>
+                    <tr>
+                        <th>Gender</th>
+                        <td>{{ $volunteer->gender }}</td>
+                    </tr>
+                    <tr>
+                        <th>Age Group</th>
+                        <td>{{ $volunteer->age_group }}</td>
+                    </tr>
+                    <tr>
                         <th>Availability</th>
                         <td>{{ $volunteer->availability }}</td>
                     </tr>

@@ -127,4 +127,57 @@ class WebsiteController extends Controller
         $page = Page::where('slug', $slug)->where('is_active', true)->firstOrFail();
         return view('website.pages.show', compact('page'));
     }
+    public function storeContact(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'subject' => 'nullable|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        \App\Models\ContactSubmission::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'subject' => $request->subject,
+            'message' => $request->message,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ]);
+
+        return redirect()->back()->with('success', 'Your message has been sent successfully. We will get back to you soon.');
+    }
+
+    public function storeVolunteer(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'nationality' => 'required|string|max:255',
+            'gender' => 'required|string|in:Male,Female',
+            'age_group' => 'required|string',
+            'availability' => 'required|string',
+            'interest' => 'required|string',
+            'experience' => 'required|string',
+            'address' => 'nullable|string',
+        ]);
+
+        \App\Models\Volunteer::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'nationality' => $request->nationality,
+            'gender' => $request->gender,
+            'age_group' => $request->age_group,
+            'availability' => $request->availability,
+            'interest_areas' => [$request->interest], // Store as array
+            'experience' => $request->experience,
+            'address' => $request->address,
+        ]);
+
+        return redirect()->back()->with('success', 'Thank you for your interest! Your application has been submitted successfully.');
+    }
 }

@@ -33,7 +33,7 @@
                                         {{ ucfirst(str_replace('_', ' ', $volunteer->status)) }}
                                     </span>
                                 </td>
-                                <td>{{ $volunteer->created_at->format('Y-m-d') }}</td>
+                                <td>{{ $volunteer->created_at->format('d/m/Y') }}</td>
                                 <td>
                                     <a href="{{ route('admin.volunteers.show', $volunteer) }}" class="btn btn-sm btn-info">View</a>
                                     <form action="{{ route('admin.volunteers.destroy', $volunteer) }}" method="POST" class="d-inline">
