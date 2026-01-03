@@ -21,6 +21,12 @@ class CampaignController extends Controller
         return view('admin.campaigns.index', compact('campaigns'));
     }
 
+    public function show(Campaign $campaign)
+    {
+        $campaign->load('donations');
+        return view('admin.campaigns.show', compact('campaign'));
+    }
+
     public function create()
     {
         $languages = Language::where('is_active', true)->get();
@@ -32,6 +38,7 @@ class CampaignController extends Controller
         $request->validate([
             'slug' => 'required|unique:campaigns,slug',
             'target_amount' => 'nullable|numeric',
+            'raised_amount' => 'nullable|numeric',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'featured_image' => 'nullable|image|max:2048',
@@ -46,6 +53,7 @@ class CampaignController extends Controller
             'slug' => Str::slug($request->slug),
             'status' => $request->status ?? 'draft',
             'target_amount' => $request->target_amount,
+            'raised_amount' => $request->raised_amount ?? 0,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'featured_image' => $imagePath,
@@ -85,6 +93,7 @@ class CampaignController extends Controller
         $request->validate([
             'slug' => 'required|unique:campaigns,slug,' . $campaign->id,
             'target_amount' => 'nullable|numeric',
+            'raised_amount' => 'nullable|numeric',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'featured_image' => 'nullable|image|max:2048',
@@ -98,6 +107,7 @@ class CampaignController extends Controller
             'slug' => Str::slug($request->slug),
             'status' => $request->status,
             'target_amount' => $request->target_amount,
+            'raised_amount' => $request->raised_amount,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'is_featured' => $request->has('is_featured'),

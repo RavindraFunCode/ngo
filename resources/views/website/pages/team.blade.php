@@ -1,5 +1,7 @@
 @extends('layouts.website')
 
+@section('title', 'Meet Our Team || Humanity')
+
 @section('content')
     <div class="inner-banner has-base-color-overlay text-center" style="background: url({{ asset('website/images/background/4.jpg') }});">
         <div class="container">
@@ -32,97 +34,44 @@
                 <h2>Meet Our <span class="thm-color">Team</span></h2>
             </div>  
             <div class="row">
-                {{-- Static Team Members for now --}}
+                @foreach($members as $member)
                 <article class="col-md-3 col-sm-6 col-xs-12">
                     <div class="single-team-member">
                         <figure class="img-box">
-                            <a href="#"><img src="{{ asset('website/images/team/t1.jpg') }}" alt=""></a>
+                            <a href="#"><img src="{{ \Illuminate\Support\Str::startsWith($member->image, 'website/') ? asset($member->image) : asset('uploads/' . $member->image) }}" alt=""></a>
+                            @php
+                                $validLinks = collect($member->social_links)->filter(function($link) {
+                                    return !empty($link);
+                                });
+                            @endphp
+                            
+                            @if($validLinks->isNotEmpty())
                             <div class="overlay">
                                 <div class="inner-box">
                                     <ul class="social-icon">
-                                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                                        @foreach($validLinks as $platform => $link)
+                                            <li><a href="{{ $link }}"><i class="fa fa-{{ $platform }}"></i></a></li>
+                                        @endforeach
                                     </ul>
                                 </div>
                             </div>
+                            @endif
                         </figure>
                         <div class="author-info">
-                            <a href="#"><h4>Felicity BNovak</h4></a>
-                            <p>CEO & Founder</p>
+                            <a href="#"><h4>{{ $member->name }}</h4></a>
+                            <p>{{ $member->role }}</p>
                             <ul>
-                                <li><i class="fa fa-phone-square"></i>Phone: +123-456-7890</li>
-                                <li><i class="fa fa-envelope-square"></i><a href="#">Felicity@Experts.com</a></li>
+                                @if($member->phone)
+                                    <li><i class="fa fa-phone-square"></i>Phone: {{ $member->phone }}</li>
+                                @endif
+                                @if($member->email)
+                                    <li><i class="fa fa-envelope-square"></i><a href="mailto:{{ $member->email }}">{{ $member->email }}</a></li>
+                                @endif
                             </ul>
                         </div>
                     </div>
                 </article>
-                <article class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="single-team-member">
-                        <figure class="img-box">
-                            <a href="#"><img src="{{ asset('website/images/team/t2.jpg') }}" alt=""></a>
-                            <div class="overlay">
-                                <div class="inner-box">
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </figure>
-                        <div class="author-info">
-                            <a href="#"><h4>Mark Richarson</h4></a>
-                            <p>Board of Trustee</p>
-                            <ul>
-                                <li><i class="fa fa-phone-square"></i>Phone: +123-456-7890</li>
-                                <li><i class="fa fa-envelope-square"></i><a href="#">Mark@Experts.com</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="single-team-member">
-                        <figure class="img-box">
-                            <a href="#"><img src="{{ asset('website/images/team/t3.jpg') }}" alt=""></a>
-                            <div class="overlay">
-                                <div class="inner-box">
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </figure>
-                        <div class="author-info">
-                            <a href="#"><h4>Jom Caraleno</h4></a>
-                            <p>Board of Trustee</p>
-                            <ul>
-                                <li><i class="fa fa-phone-square"></i>Phone: +123-456-7890</li>
-                                <li><i class="fa fa-envelope-square"></i><a href="#">Jom@Experts.com</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="single-team-member">
-                        <figure class="img-box">
-                            <a href="#"><img src="{{ asset('website/images/team/t4.jpg') }}" alt=""></a>
-                            <div class="overlay">
-                                <div class="inner-box">
-                                    <ul class="social">
-                                        <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </figure>
-                        <div class="author-info">
-                            <a href="#"><h4>Asahtan Marsh</h4></a>
-                            <p>Board of Advisor</p>
-                            <ul>
-                                <li><i class="fa fa-phone-square"></i>Phone: +123-456-7890</li>
-                                <li><i class="fa fa-envelope-square"></i><a href="#">Asahtan@Experts.com</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </article>
+                @endforeach
             </div>
         </div>
     </section>

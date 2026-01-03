@@ -27,14 +27,11 @@ class SettingsController extends Controller
         $data = $request->except('_token');
 
         foreach ($data as $key => $value) {
-            // Determine group based on key prefix or hidden field if needed
-            // For simplicity, we'll assume keys are unique or handled by service
-            // But here we might need to know the group.
-            // Let's assume the form sends 'group' => 'general' etc.
-            // Actually, simpler: just update by key.
-            
             $setting = Setting::where('key', $key)->first();
             if ($setting) {
+                if ($request->hasFile($key)) {
+                    $value = $request->file($key)->store('settings', 'public');
+                }
                 $this->settingsService->set($key, $value, $setting->group, $setting->type ?? 'string');
             }
         }

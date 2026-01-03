@@ -38,11 +38,21 @@ class DonationController extends Controller
 
     public function process(Request $request)
     {
+        $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'campaign_id' => 'required|exists:campaigns,id',
+        ]);
+
         // Mock payment processing
         $success = true; // Simulate success
 
         if ($success) {
+            $campaign = Campaign::findOrFail($request->input('campaign_id'));
+
             $donation = new \App\Models\Donation();
+            $donation->campaign_id = $campaign->id;
             $donation->amount = $request->input('amount');
             $donation->donor_name = $request->input('name');
             $donation->donor_email = $request->input('email');
@@ -53,6 +63,9 @@ class DonationController extends Controller
             $donation->status = 'paid'; // Default status for now
             $donation->paid_at = now();
             $donation->save();
+
+            // Increment raised amount
+            $campaign->increment('raised_amount', $donation->amount);
 
             return redirect()->route('donation.thank-you');
         } else {

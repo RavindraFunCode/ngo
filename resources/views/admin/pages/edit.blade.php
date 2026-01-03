@@ -10,22 +10,27 @@
                 <h4 class="card-title">Edit Page</h4>
             </div>
             <div class="card-body">
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                
+                @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
                 <form action="{{ route('admin.pages.update', $page) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label for="slug" class="form-label">Slug</label>
                             <input type="text" class="form-control" id="slug" name="slug" value="{{ $page->slug }}" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="template" class="form-label">Template</label>
-                            <select class="form-control" id="template" name="template">
-                                <option value="default" {{ $page->template == 'default' ? 'selected' : '' }}>Default</option>
-                                <option value="home" {{ $page->template == 'home' ? 'selected' : '' }}>Home</option>
-                                <option value="about" {{ $page->template == 'about' ? 'selected' : '' }}>About</option>
-                                <option value="contact" {{ $page->template == 'contact' ? 'selected' : '' }}>Contact</option>
-                            </select>
                         </div>
                     </div>
                     <div class="mb-3 form-check">

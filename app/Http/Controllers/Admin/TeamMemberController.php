@@ -19,6 +19,8 @@ class TeamMemberController extends Controller
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'name' => 'required|max:255',
             'role' => 'required|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:20',
             'image' => 'required|image',
             'order' => 'integer',
         ]);
@@ -37,8 +39,15 @@ class TeamMemberController extends Controller
         return response()->json(['success' => 'Team member created successfully.']);
     }
 
-    public function edit(TeamMember $team)
+    public function edit($id)
     {
+        // Explicitly finding by ID to avoid any route binding issues
+        $team = TeamMember::find($id);
+        
+        if (!$team) {
+            return response()->json(['error' => 'Team member not found'], 404);
+        }
+        
         return response()->json($team);
     }
 
@@ -47,6 +56,8 @@ class TeamMemberController extends Controller
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'name' => 'required|max:255',
             'role' => 'required|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:20',
             'image' => 'nullable|image',
             'order' => 'integer',
         ]);

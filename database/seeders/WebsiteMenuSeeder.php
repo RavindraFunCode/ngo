@@ -45,11 +45,14 @@ class WebsiteMenuSeeder extends Seeder
         // 3. Causes
         $causes = $this->createItem($menu->id, null, 'Causes', 'campaigns.index', 'route', 3, $enLang, $hiLang);
 
-        // 4. Blog
-        $blog = $this->createItem($menu->id, null, 'Blog', 'blog.index', 'route', 4, $enLang, $hiLang);
+        // 4. Events
+        $events = $this->createItem($menu->id, null, 'Events', 'events.index', 'route', 4, $enLang, $hiLang);
 
-        // 5. Gallery
-        $gallery = $this->createItem($menu->id, null, 'Gallery', 'gallery', 'route', 5, $enLang, $hiLang);
+        // 5. Blog
+        $blog = $this->createItem($menu->id, null, 'Blog', 'blog.index', 'route', 5, $enLang, $hiLang);
+
+        // 6. Gallery
+        $gallery = $this->createItem($menu->id, null, 'Gallery', 'gallery', 'route', 6, $enLang, $hiLang);
     }
 
     private function createItem($menuId, $parentId, $label, $urlOrRoute, $type, $sortOrder, $enLang, $hiLang)

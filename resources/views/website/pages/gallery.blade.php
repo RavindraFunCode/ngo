@@ -1,5 +1,7 @@
 @extends('layouts.website')
 
+@section('title', 'Gallery || Humanity')
+
 @section('content')
     <div class="inner-banner has-base-color-overlay text-center" style="background: url({{ asset('website/images/background/4.jpg') }});">
         <div class="container">

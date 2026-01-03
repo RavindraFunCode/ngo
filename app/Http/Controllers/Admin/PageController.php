@@ -26,13 +26,12 @@ class PageController extends Controller
     {
         $request->validate([
             'slug' => 'required|unique:pages,slug',
-            'is_active' => 'boolean',
+            'is_active' => 'nullable',
         ]);
 
         $page = Page::create([
             'slug' => Str::slug($request->slug),
             'is_active' => $request->has('is_active'),
-            'template' => $request->template ?? 'default',
         ]);
 
         foreach ($request->translations as $locale => $data) {
@@ -64,13 +63,12 @@ class PageController extends Controller
     {
         $request->validate([
             'slug' => 'required|unique:pages,slug,' . $page->id,
-            'is_active' => 'boolean',
+            'is_active' => 'nullable',
         ]);
 
         $page->update([
             'slug' => Str::slug($request->slug),
             'is_active' => $request->has('is_active'),
-            'template' => $request->template ?? 'default',
         ]);
 
         foreach ($request->translations as $locale => $data) {

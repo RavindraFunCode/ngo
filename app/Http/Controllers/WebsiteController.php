@@ -8,32 +8,69 @@ use App\Models\Page;
 use App\Models\Campaign;
 use App\Models\BlogPost;
 use App\Models\Menu;
+use App\Models\Event;
 
 class WebsiteController extends Controller
 {
+    public function events(Request $request)
+    {
+        $query = Event::where('status', 'published')->where('is_active', true);
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('translations', function($t) use ($search) {
+                    $t->where('title', 'like', "%{$search}%")
+                      ->orWhere('description', 'like', "%{$search}%");
+                })
+                ->orWhere('location', 'like', "%{$search}%");
+            });
+        }
+
+        $events = $query->latest('start_date')->paginate(6);
+        $upcomingEvents = Event::where('status', 'published')->where('is_active', true)->where('start_date', '>', now())->orderBy('start_date')->take(3)->get();
+
+        return view('website.events.index', compact('events', 'upcomingEvents'));
+    }
+
+    public function eventShow($slug)
+    {
+        $event = Event::where('slug', $slug)->where('status', 'published')->where('is_active', true)->firstOrFail();
+        $recentEvents = Event::where('status', 'published')->where('is_active', true)->where('id', '!=', $event->id)->latest('start_date')->take(3)->get();
+        return view('website.events.show', compact('event', 'recentEvents'));
+    }
+
     public function index()
     {
         $urgentCause = Campaign::where('status', 'active')->latest()->first();
         $latestPosts = BlogPost::where('status', 'published')->latest()->take(3)->get();
         
         $sliders = \App\Models\Slider::where('is_active', true)->orderBy('order')->get();
-        $features = \App\Models\Feature::where('is_active', true)->orderBy('order')->get();
+        $features = \App\Models\Feature::where('type', 'welcome')->where('is_active', true)->orderBy('order')->get();
+        $aboutFeatures = \App\Models\Feature::where('type', 'about_us')->where('is_active', true)->orderBy('order')->get();
+        $counters = \App\Models\Feature::where('type', 'counter')->where('is_active', true)->orderBy('order')->get();
         $team = \App\Models\TeamMember::where('is_active', true)->orderBy('order')->take(4)->get(); // Limit to 4 for homepage
         $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
         $partners = \App\Models\Partner::orderBy('order')->get();
         $gallery = \App\Models\GalleryItem::where('is_active', true)->latest()->take(6)->get(); // Limit to 6 for homepage
 
-        return view('website.home.index', compact('urgentCause', 'latestPosts', 'sliders', 'features', 'team', 'testimonials', 'partners', 'gallery'));
+        return view('website.home.index', compact('urgentCause', 'latestPosts', 'sliders', 'features', 'aboutFeatures', 'counters', 'team', 'testimonials', 'partners', 'gallery'));
     }
 
     public function about()
     {
-        return view('website.pages.about');
+        $settings = \App\Models\Setting::where('group', 'about_page')->pluck('value', 'key');
+        
+        $introFeatures = \App\Models\Feature::where('type', 'about_intro')->orderBy('order')->get();
+        $whyChooseFeatures = \App\Models\Feature::where('type', 'why_choose_us')->orderBy('order')->get();
+        $counters = \App\Models\Feature::where('type', 'about_counter')->orderBy('order')->get();
+
+        return view('website.pages.about', compact('settings', 'introFeatures', 'whyChooseFeatures', 'counters'));
     }
 
     public function campaigns()
     {
-        $campaigns = Campaign::where('status', 'active')->latest()->paginate(9);
+        $campaigns = Campaign::where('status', 'published')->latest()->paginate(9);
         return view('website.campaigns.index', compact('campaigns'));
     }
 
@@ -67,7 +104,8 @@ class WebsiteController extends Controller
 
     public function team()
     {
-        return view('website.pages.team');
+        $members = \App\Models\TeamMember::where('is_active', true)->orderBy('order')->get();
+        return view('website.pages.team', compact('members'));
     }
 
     public function faq(Request $request)
@@ -114,12 +152,14 @@ class WebsiteController extends Controller
 
     public function privacy()
     {
-        return view('website.pages.privacy');
+        $page = Page::where('slug', 'privacy-policy')->where('is_active', true)->firstOrFail();
+        return view('website.pages.privacy', compact('page'));
     }
 
     public function terms()
     {
-        return view('website.pages.terms');
+        $page = Page::where('slug', 'terms-and-conditions')->where('is_active', true)->firstOrFail();
+        return view('website.pages.terms', compact('page'));
     }
 
     public function page($slug)
@@ -148,6 +188,31 @@ class WebsiteController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Your message has been sent successfully. We will get back to you soon.');
+    }
+
+    public function storeEventReply(Request $request, $slug)
+    {
+        $event = Event::where('slug', $slug)->firstOrFail();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'subject' => 'nullable|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        \App\Models\ContactSubmission::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'subject' => $request->subject ? $request->subject : 'Reply to Event: ' . $event->title,
+            'message' => $request->message,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ]);
+
+        return redirect()->back()->with('success', 'Your reply has been submitted successfully.');
     }
 
     public function storeVolunteer(Request $request)

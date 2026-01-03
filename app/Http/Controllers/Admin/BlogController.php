@@ -70,20 +70,20 @@ class BlogController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.blog.index')->with('success', 'Post created successfully.');
+        return redirect()->route('admin.blog.posts.index')->with('success', 'Post created successfully.');
     }
 
-    public function edit(BlogPost $blog)
+    public function edit(BlogPost $post)
     {
         $categories = Category::where('is_active', true)->get();
         $languages = Language::where('is_active', true)->get();
-        return view('admin.blog.posts.edit', compact('blog', 'categories', 'languages'));
+        return view('admin.blog.posts.edit', compact('post', 'categories', 'languages'));
     }
 
-    public function update(Request $request, BlogPost $blog)
+    public function update(Request $request, BlogPost $post)
     {
         $request->validate([
-            'slug' => 'required|unique:posts,slug,' . $blog->id . '|max:255',
+            'slug' => 'required|unique:posts,slug,' . $post->id . '|max:255',
             'category_id' => 'required|exists:post_categories,id',
             'featured_image' => 'nullable|image|max:2048',
             'status' => 'required|in:draft,published',
@@ -94,10 +94,10 @@ class BlogController extends Controller
         ]);
 
         if ($request->hasFile('featured_image')) {
-            $blog->featured_image = $request->file('featured_image')->store('blog', 'public');
+            $post->featured_image = $request->file('featured_image')->store('blog', 'public');
         }
 
-        $blog->update([
+        $post->update([
             'slug' => Str::slug($request->slug),
             'category_id' => $request->category_id,
             'status' => $request->status,
@@ -111,7 +111,7 @@ class BlogController extends Controller
                 continue;
             }
 
-            $blog->translations()->updateOrCreate(
+            $post->translations()->updateOrCreate(
                 ['language_id' => $languages[$locale]->id],
                 [
                     'title' => $data['title'],
@@ -125,14 +125,14 @@ class BlogController extends Controller
             );
         }
 
-        return redirect()->route('admin.blog.index')->with('success', 'Post updated successfully.');
+        return redirect()->route('admin.blog.posts.index')->with('success', 'Post updated successfully.');
     }
 
-    public function destroy(BlogPost $blog)
+    public function destroy(BlogPost $post)
     {
-        $blog->translations()->delete();
-        $blog->delete();
-        return redirect()->route('admin.blog.index')->with('success', 'Post deleted successfully.');
+        $post->translations()->delete();
+        $post->delete();
+        return redirect()->route('admin.blog.posts.index')->with('success', 'Post deleted successfully.');
     }
     public function show($id)
     {

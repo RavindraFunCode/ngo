@@ -21,6 +21,9 @@ Route::get('/careers', [\App\Http\Controllers\WebsiteController::class, 'career'
 Route::get('/privacy-policy', [\App\Http\Controllers\WebsiteController::class, 'privacy'])->name('privacy');
 Route::get('/terms-and-conditions', [\App\Http\Controllers\WebsiteController::class, 'terms'])->name('terms');
 Route::get('/page/{slug}', [\App\Http\Controllers\WebsiteController::class, 'page'])->name('page.show');
+Route::get('/events', [\App\Http\Controllers\WebsiteController::class, 'events'])->name('events.index');
+Route::get('/events/{slug}', [\App\Http\Controllers\WebsiteController::class, 'eventShow'])->name('events.show');
+Route::post('/events/{slug}/reply', [\App\Http\Controllers\WebsiteController::class, 'storeEventReply'])->name('events.reply');
 
 Route::post('/donation/checkout', [\App\Http\Controllers\DonationController::class, 'checkout'])->name('donation.checkout');
 Route::post('/donation/process', [\App\Http\Controllers\DonationController::class, 'process'])->name('donation.process');

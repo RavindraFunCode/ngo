@@ -32,8 +32,8 @@
                             @foreach($posts as $post)
                             <tr id="row-{{ $post->id }}">
                                 <td>{{ $post->getTranslation(app()->getLocale())->title ?? $post->getTranslation('en')->title ?? 'N/A' }}</td>
-                                <td>{{ $post->category->getTranslation(app()->getLocale())->name ?? 'N/A' }}</td>
-                                <td>{{ $post->author->name }}</td>
+                                <td>{{ $post->category ? ($post->category->getTranslation(app()->getLocale())->name ?? 'N/A') : 'N/A' }}</td>
+                                <td>{{ $post->author->name ?? 'N/A' }}</td>
                                 <td>{{ $post->published_at ? $post->published_at->format('d/m/Y') : 'Draft' }}</td>
                                 <td>
                                     @if($post->is_active)

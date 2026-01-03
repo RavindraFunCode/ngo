@@ -122,42 +122,39 @@
     <section class="about sec-padd2">
         <div class="container">
             <div class="section-title center">
-                <h2>About our <span class="thm-color">humanity</span></h2>
+                <h2>{!! $settings['about_section_title'] ?? 'About our <span class="thm-color">humanity</span>' !!}</h2>
             </div>
             <div class="row">
                 <article class="col-md-6 col-sm-12 left-column">
+                    @foreach($aboutFeatures as $feature)
                     <div class="row padd-bottom-30">
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <div class="img-box"><img alt="" src="{{ asset('website/images/resource/about4.jpg') }}"></div>
+                            <div class="img-box"><img alt="{{ $feature->title }}" src="{{ $feature->image ? (\Illuminate\Support\Str::startsWith($feature->image, 'website/') ? asset($feature->image) : asset('uploads/' . $feature->image)) : asset('website/images/resource/default.jpg') }}"></div>
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h3>What We Do</h3>
-                            <p>Idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actually teachings of the great explorer of the truth.</p>
+                            <h3>{{ $feature->title }}</h3>
+                            <p>{{ $feature->description }}</p>
                         </div>
                     </div>
-                    <div class="row padd-bottom-30">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <div class="img-box"><img alt="" src="{{ asset('website/images/resource/about5.jpg') }}"></div>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h3>How It Works</h3>
-                            <p>Idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actually teachings of the great explorer of the truth.</p>
-                        </div>
-                    </div>
+                    @endforeach
                 </article>
                 <article class="col-md-6 col-sm-6 col-xs-12">
                     <div class="content">
                         <div class="text">
-                            <p>Denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actually teachings of the great explorer of the truth. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.</p>
+                            <p>{!! $settings['about_right_text_1'] ?? '' !!}</p>
                         </div>
-                        <h3 class="thm-color">Years of Experience</h3>
+                        <h3 class="thm-color">{{ $settings['about_right_title'] ?? 'Years of Experience' }}</h3>
                         <div class="text">
-                            <p>Denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actually teachings of the great explorer of the truth.</p>
+                            <p>{!! $settings['about_right_text_2'] ?? '' !!}</p>
                         </div>
                         <ul>
-                            <li><i class="fa fa-check"></i>Excepteur sint occaecat cupidatat non proident</li>
-                            <li><i class="fa fa-check"></i>Sunt in culpa qui officia deserunt mollit anim id est laborum</li>
-                            <li><i class="fa fa-check"></i>Duis aute irure dolor in reprehenderit in voluptate velit esse</li>
+                            @if(isset($settings['about_right_list']))
+                                @foreach(explode("\n", $settings['about_right_list']) as $item)
+                                    @if(trim($item))
+                                        <li><i class="fa fa-check"></i>{{ trim($item) }}</li>
+                                    @endif
+                                @endforeach
+                            @endif
                         </ul>
                     </div>
                 </article>
@@ -176,16 +173,22 @@
                 <article class="item col-md-3 col-sm-6 col-xs-12">
                     <div class="inner-box">
                         <div class="img-box">
-                            <img alt="{{ $member->name }}" src="{{ asset('uploads/' . $member->image) }}">
+                            <img alt="{{ $member->name }}" src="{{ \Illuminate\Support\Str::startsWith($member->image, 'website/') ? asset($member->image) : asset('uploads/' . $member->image) }}">
+                            @php
+                                $validLinks = collect($member->social_links)->filter(function($link) {
+                                    return !empty($link);
+                                });
+                            @endphp
+
+                            @if($validLinks->isNotEmpty())
                             <div class="overlay3">
                                 <ul class="social-icon">
-                                    @if($member->social_links)
-                                        @foreach($member->social_links as $platform => $link)
-                                        <li><a href="{{ $link }}"><i class="fa fa-{{ $platform }}"></i></a></li>
-                                        @endforeach
-                                    @endif
+                                    @foreach($validLinks as $platform => $link)
+                                    <li><a href="{{ $link }}"><i class="fa fa-{{ $platform }}"></i></a></li>
+                                    @endforeach
                                 </ul>
                             </div>
+                            @endif
                         </div>
                     </div>
                     <div class="author center">
@@ -231,64 +234,33 @@
     </section>
 
     <!-- Fact Counter (Style 2) -->
-    <section class="fact-counter fact-counter-2 sec-padd" style="background-image: url('{{ asset('website/images/background/10.jpg') }}');">
+    <section class="fact-counter fact-counter-2 sec-padd" style="background-image: url('{{ isset($settings['home_volunteer_bg_image']) && \Illuminate\Support\Str::startsWith($settings['home_volunteer_bg_image'], 'website/') ? asset($settings['home_volunteer_bg_image']) : asset('uploads/' . ($settings['home_volunteer_bg_image'] ?? '')) }}');">
         <div class="container">
             <div class="row clearfix">
                 <article class="col-md-6 col-sm-12">
                     <div class="content">
-                        <p class="thm-color">Want to join with us</p>
-                        <h2>Become a proud volunteer</h2>
-                        <p>When you bring together those who have, with those who have not - miracles happen. Become a time hero by volunteering with us. Meet new friends, gain new skills, get happiness and have fun!</p>
+                        <p class="thm-color">{{ $settings['home_volunteer_subtitle'] ?? 'Want to join with us' }}</p>
+                        <h2>{{ $settings['home_volunteer_title'] ?? 'Become a proud volunteer' }}</h2>
+                        <p>{{ $settings['home_volunteer_text'] ?? 'When you bring together those who have, with those who have not - miracles happen. Become a time hero by volunteering with us. Meet new friends, gain new skills, get happiness and have fun!' }}</p>
                         <div class="link">
-                            <a class="thm-btn" href="{{ route('volunteer') }}">Join with us</a>
+                            <a class="thm-btn" href="{{ $settings['home_volunteer_btn_link'] ?? route('volunteer') }}">{{ $settings['home_volunteer_btn_text'] ?? 'Join with us' }}</a>
                         </div>
                     </div>
                 </article>
                 <article class="col-md-6 col-sm-12">
                     <div class="counter-outer row clearfix">
                         <!--Team Members-->
+                        @foreach($counters as $counter)
                         <article class="column counter-column col-md-6 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0ms">
                             <div class="item clearfix">
-                                <div class="icon"><i class="icon-people-1"></i></div>
+                                <div class="icon"><i class="{{ $counter->icon ?? 'icon-people-1' }}"></i></div>
                                 <div class="count-area">
-                                    <div class="count-outer"><span class="count-text" data-speed="3000" data-stop="{{ $settings['count_team'] ?? '50' }}">0</span></div>
+                                    <div class="count-outer"><span class="count-text" data-speed="3000" data-stop="{{ $counter->subtitle ?? '0' }}">0</span></div>
                                 </div>
-                                <h4 class="counter-title">Team Members</h4>
+                                <h4 class="counter-title">{{ $counter->title }}</h4>
                             </div>
                         </article>
-                        
-                        <!--Winning Awards-->
-                        <article class="column counter-column col-md-6 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0ms">
-                            <div class="item clearfix">
-                                <div class="icon"><i class="icon-ribbon"></i></div>
-                                <div class="count-area">
-                                    <div class="count-outer"><span class="count-text" data-speed="3000" data-stop="{{ $settings['count_awards'] ?? '12' }}">0</span></div>
-                                </div>
-                                <h4 class="counter-title">Winning Awards</h4>
-                            </div>
-                        </article>
-
-                        <!--Experienced-->
-                        <article class="column counter-column col-md-6 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0ms">
-                            <div class="item clearfix">
-                                <div class="icon"><i class="icon-nature-1"></i></div>
-                                <div class="count-area">
-                                    <div class="count-outer"><span class="count-text" data-speed="3000" data-stop="{{ $settings['count_experienced'] ?? '10' }}">0</span></div>
-                                </div>
-                                <h4 class="counter-title">Experienced</h4>
-                            </div>
-                        </article>
-
-                        <!--Project Done-->
-                        <article class="column counter-column col-md-6 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0ms">
-                            <div class="item clearfix">
-                                <div class="icon"><i class="icon-shapes"></i></div>
-                                <div class="count-area">
-                                    <div class="count-outer"><span class="count-text" data-speed="3000" data-stop="{{ $settings['count_projects'] ?? '150' }}">0</span></div>
-                                </div>
-                                <h4 class="counter-title">Project Done</h4>
-                            </div>
-                        </article>
+                        @endforeach
                     </div>
                 </article>
             </div>

@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 
-@section('title', 'Campaigns')
+@section('title', 'Campaigns/Causes')
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="card-title">Campaigns</h4>
+                <h4 class="card-title">Campaigns/Causes</h4>
                 <a href="{{ route('admin.campaigns.create') }}" class="btn btn-primary">Add Campaign</a>
             </div>
             <div class="card-body">

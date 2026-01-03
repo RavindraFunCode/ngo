@@ -35,6 +35,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label">Raised Amount</label>
+                        <input type="number" step="0.01" class="form-control" name="raised_amount" value="{{ old('raised_amount', $campaign->raised_amount) }}">
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Start Date</label>
                         <input type="date" class="form-control" name="start_date" value="{{ old('start_date', $campaign->start_date ? $campaign->start_date->format('Y-m-d') : '') }}">
                     </div>

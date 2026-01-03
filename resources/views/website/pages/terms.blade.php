@@ -1,5 +1,7 @@
 @extends('layouts.website')
 
+@section('title', 'Terms & Conditions || Humanity')
+
 @section('content')
     <div class="inner-banner has-base-color-overlay text-center" style="background: url({{ asset('website/images/background/4.jpg') }});">
         <div class="container">
@@ -26,21 +28,16 @@
     <section class="sec-padd">
         <div class="container">
             <div class="text">
-                <h3>Terms & Conditions</h3>
-                <p>Last updated: November 29, 2025</p>
-                <p>Please read these terms and conditions carefully before using Our Service.</p>
+                @php
+                    $locale = app()->getLocale();
+                    $trans = $page->getTranslation($locale);
+                @endphp
                 
-                <h4>Interpretation and Definitions</h4>
-                <p>The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.</p>
-                
-                <h4>Acknowledgment</h4>
-                <p>These are the Terms and Conditions governing the use of this Service and the agreement that operates between You and the Company. These Terms and Conditions set out the rights and obligations of all users regarding the use of the Service.</p>
-                
-                <h4>Contact Us</h4>
-                <p>If you have any questions about these Terms and Conditions, You can contact us:</p>
-                <ul>
-                    <li>By email: terms@humanity.org</li>
-                </ul>
+                @if($trans)
+                    {!! $trans->content !!}
+                @else
+                    <div class="alert alert-warning">Content not available in current language.</div>
+                @endif
             </div>
         </div>
     </section>

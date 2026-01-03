@@ -37,12 +37,38 @@ Route::middleware(['auth'])->group(function () {
 
     // Homepage Content Routes
     Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class);
+    Route::get('features/{id}/edit', [\App\Http\Controllers\Admin\FeatureController::class, 'edit'])->name('features.edit');
     Route::resource('features', \App\Http\Controllers\Admin\FeatureController::class);
+    // Explicit route for Team edit to avoid implicit binding issues
+    Route::get('team/{id}/edit', [\App\Http\Controllers\Admin\TeamMemberController::class, 'edit'])->name('team.edit');
     Route::resource('team', \App\Http\Controllers\Admin\TeamMemberController::class);
     Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class);
     Route::resource('partners', \App\Http\Controllers\Admin\PartnerController::class);
     Route::resource('gallery', \App\Http\Controllers\Admin\GalleryController::class);
+    
+    // Volunteer Section Routes
+    Route::get('volunteer-section', [\App\Http\Controllers\Admin\VolunteerSectionController::class, 'index'])->name('volunteer.index');
+    Route::post('volunteer-section/settings', [\App\Http\Controllers\Admin\VolunteerSectionController::class, 'updateSettings'])->name('volunteer.settings.update');
+    Route::post('volunteer-section/counter', [\App\Http\Controllers\Admin\VolunteerSectionController::class, 'storeCounter'])->name('volunteer.counter.store');
+    Route::put('volunteer-section/counter/{id}', [\App\Http\Controllers\Admin\VolunteerSectionController::class, 'updateCounter'])->name('volunteer.counter.update');
+    Route::delete('volunteer-section/counter/{id}', [\App\Http\Controllers\Admin\VolunteerSectionController::class, 'destroyCounter'])->name('volunteer.counter.destroy');
+
+    // About Section Routes
+    Route::get('about-section', [\App\Http\Controllers\Admin\AboutSectionController::class, 'index'])->name('about.section.index');
+    Route::post('about-section/settings', [\App\Http\Controllers\Admin\AboutSectionController::class, 'updateSettings'])->name('about.settings.update');
+    Route::post('about-section/feature', [\App\Http\Controllers\Admin\AboutSectionController::class, 'storeFeature'])->name('about.feature.store');
+    Route::put('about-section/feature/{id}', [\App\Http\Controllers\Admin\AboutSectionController::class, 'updateFeature'])->name('about.feature.update');
+    Route::delete('about-section/feature/{id}', [\App\Http\Controllers\Admin\AboutSectionController::class, 'destroyFeature'])->name('about.feature.destroy');
+
+    // About Page (Full Page) Routes
+    Route::get('about-page', [\App\Http\Controllers\Admin\AboutPageController::class, 'index'])->name('about.page.index');
+    Route::post('about-page/settings', [\App\Http\Controllers\Admin\AboutPageController::class, 'updateSettings'])->name('about.page.settings.update');
+    Route::post('about-page/feature', [\App\Http\Controllers\Admin\AboutPageController::class, 'storeFeature'])->name('about.page.feature.store');
+    Route::put('about-page/feature/{id}', [\App\Http\Controllers\Admin\AboutPageController::class, 'updateFeature'])->name('about.page.feature.update');
+    Route::delete('about-page/feature/{id}', [\App\Http\Controllers\Admin\AboutPageController::class, 'destroyFeature'])->name('about.page.feature.destroy');
+
     Route::resource('campaigns', \App\Http\Controllers\Admin\CampaignController::class);
+    Route::resource('events', \App\Http\Controllers\Admin\EventController::class);
     Route::resource('donations', \App\Http\Controllers\Admin\DonationController::class)->only(['index', 'show']);
     Route::resource('volunteers', \App\Http\Controllers\Admin\VolunteerController::class)->except(['create', 'store', 'edit']);
     Route::resource('contact-submissions', \App\Http\Controllers\Admin\ContactSubmissionController::class)->except(['create', 'store', 'edit']);

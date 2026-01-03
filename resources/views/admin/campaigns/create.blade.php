@@ -33,6 +33,10 @@
                             <input type="number" step="0.01" class="form-control" id="target_amount" name="target_amount" value="{{ old('target_amount') }}" required>
                         </div>
                         <div class="col-md-4">
+                            <label for="raised_amount" class="form-label">Raised Amount</label>
+                            <input type="number" step="0.01" class="form-control" id="raised_amount" name="raised_amount" value="{{ old('raised_amount', 0) }}">
+                        </div>
+                        <div class="col-md-4">
                             <label for="start_date" class="form-label">Start Date</label>
                             <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date') }}">
                         </div>

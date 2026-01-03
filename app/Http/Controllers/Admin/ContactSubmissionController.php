@@ -8,9 +8,17 @@ use App\Models\ContactSubmission;
 
 class ContactSubmissionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $submissions = ContactSubmission::latest()->paginate(20);
+        $query = ContactSubmission::latest();
+
+        if ($request->has('type') && $request->type == 'event_reply') {
+            $query->where('subject', 'like', 'Reply to Event:%');
+        } else {
+             $query->where('subject', 'not like', 'Reply to Event:%');
+        }
+
+        $submissions = $query->paginate(20);
         return view('admin.contact_submissions.index', compact('submissions'));
     }
 

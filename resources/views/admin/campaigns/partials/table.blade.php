@@ -21,6 +21,7 @@
                     </span>
                 </td>
                 <td>
+                    <a href="{{ route('admin.campaigns.show', $campaign) }}" class="btn btn-sm btn-success">View</a>
                     <a href="{{ route('admin.campaigns.edit', $campaign) }}" class="btn btn-sm btn-info">Edit</a>
                     <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{{ route('admin.campaigns.destroy', $campaign) }}', {{ $campaign->id }})">Delete</button>
                 </td>

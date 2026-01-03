@@ -15,6 +15,7 @@
                 @endif
 
                 <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab">Home</a>
                     </li>
@@ -42,6 +43,10 @@
                                 <label class="form-label">Welcome Text</label>
                                 <textarea class="form-control" name="welcome_text" rows="4">{{ $settings['home']->where('key', 'welcome_text')->first()->value ?? '' }}</textarea>
                             </div>
+                            
+
+
+
                         </div>
                         <div class="tab-pane" id="general" role="tabpanel">
                             <div class="mb-3">

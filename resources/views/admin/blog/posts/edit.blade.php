@@ -10,19 +10,19 @@
                 <h4 class="card-title">Edit Blog Post</h4>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.blog.posts.update', $blog) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.blog.posts.update', ['post' => $post->id]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="slug" name="slug" value="{{ $blog->slug }}" required maxlength="255">
+                            <input type="text" class="form-control" id="slug" name="slug" value="{{ $post->slug }}" required maxlength="255">
                         </div>
                         <div class="col-md-6">
                             <label for="category_id" class="form-label">Category <span class="text-danger">*</span></label>
                             <select class="form-control" id="category_id" name="category_id" required>
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ $blog->category_id == $category->id ? 'selected' : '' }}>
+                                    <option value="{{ $category->id }}" {{ $post->category_id == $category->id ? 'selected' : '' }}>
                                         {{ $category->getTranslation(app()->getLocale())->name ?? $category->slug }}
                                     </option>
                                 @endforeach
@@ -32,21 +32,21 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="published_at" class="form-label">Published At</label>
-                            <input type="datetime-local" class="form-control" id="published_at" name="published_at" value="{{ $blog->published_at ? $blog->published_at->format('Y-m-d\TH:i') : '' }}">
+                            <input type="datetime-local" class="form-control" id="published_at" name="published_at" value="{{ $post->published_at ? $post->published_at->format('Y-m-d\TH:i') : '' }}">
                         </div>
                         <div class="col-md-6">
                             <label for="featured_image" class="form-label">Featured Image</label>
                             <input type="file" class="form-control" id="featured_image" name="featured_image">
-                            @if($blog->featured_image)
-                                <img src="{{ Storage::url($blog->featured_image) }}" alt="Current Image" class="mt-2" style="height: 100px;">
+                            @if($post->featured_image)
+                                <img src="{{ asset('storage/' . $post->featured_image) }}" alt="Current Image" class="mt-2" style="height: 100px;">
                             @endif
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                         <select class="form-control" id="status" name="status" required>
-                            <option value="draft" {{ $blog->status === 'draft' ? 'selected' : '' }}>Draft</option>
-                            <option value="published" {{ $blog->status === 'published' ? 'selected' : '' }}>Published</option>
+                            <option value="draft" {{ $post->status === 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="published" {{ $post->status === 'published' ? 'selected' : '' }}>Published</option>
                         </select>
                     </div>
 
@@ -64,7 +64,7 @@
                     <div class="tab-content">
                         @foreach($languages as $index => $language)
                         @php
-                            $translation = $blog->getTranslation($language->code);
+                            $translation = $post->getTranslation($language->code);
                         @endphp
                         <div class="tab-pane {{ $index === 0 ? 'active' : '' }}" id="lang-{{ $language->code }}" role="tabpanel">
                             <div class="mb-3">

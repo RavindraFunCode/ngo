@@ -24,4 +24,9 @@ class PageTranslation extends Model
     {
         return $this->belongsTo(Page::class);
     }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
+    }
 }

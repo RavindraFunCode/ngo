@@ -140,14 +140,14 @@
                                 <span class="nav-text"> Features </span>
                             </a>
                         </li>
-                         {{-- <li class="nav-item">
+                         <li class="nav-item">
                               <a class="nav-link" href="{{ route('admin.pages.index') }}">
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
                                    </span>
                                    <span class="nav-text"> Pages </span>
                               </a>
-                         </li> --}}
+                         </li>
 
                          <li class="nav-item">
                               <a class="nav-link collapsed" data-bs-target="#blog-nav" data-bs-toggle="collapse" href="#">
@@ -198,7 +198,7 @@
                                    <li>
                                         <a href="{{ route('admin.team.index') }}">
                                              <iconify-icon icon="solar:users-group-rounded-bold-duotone"></iconify-icon>
-                                             <span>Team</span>
+                                             <span>Team(Volunteers) Members</span>
                                         </a>
                                    </li>
                                    <li>
@@ -231,6 +231,24 @@
                                              <span>FAQs</span>
                                         </a>
                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.volunteer.index') }}">
+                                             <iconify-icon icon="solar:users-group-two-rounded-bold-duotone"></iconify-icon>
+                                             <span>Volunteer Section</span>
+                                        </a>
+                                   </li>
+                                    <li>
+                                        <a href="{{ route('admin.about.section.index') }}">
+                                             <iconify-icon icon="solar:document-text-bold-duotone"></iconify-icon>
+                                             <span>About Section</span>
+                                        </a>
+                                   </li>
+                                    <li>
+                                        <a href="{{ route('admin.about.page.index') }}">
+                                             <iconify-icon icon="solar:file-text-bold-duotone"></iconify-icon>
+                                             <span>About Us Page</span>
+                                        </a>
+                                   </li>
                               </ul>
                          </li>
 
@@ -239,13 +257,19 @@
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:heart-bold-duotone"></iconify-icon>
                                    </span>
-                                   <span class="nav-text"> Campaigns </span>
+                                   <span class="nav-text"> Campaigns/Causes </span>
                               </a>
                               <ul id="campaigns-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                                    <li>
                                         <a href="{{ route('admin.campaigns.index') }}">
                                              <iconify-icon icon="solar:list-bold-duotone"></iconify-icon>
                                              <span>All Campaigns</span>
+                                        </a>
+                                   </li>
+                                   <li>
+                                        <a href="{{ route('admin.events.index') }}">
+                                             <iconify-icon icon="solar:calendar-bold-duotone"></iconify-icon>
+                                             <span>Events</span>
                                         </a>
                                    </li>
                                    <li>
@@ -269,6 +293,12 @@
                                         <a href="{{ route('admin.volunteers.index') }}">
                                              <iconify-icon icon="solar:users-group-rounded-bold-duotone"></iconify-icon>
                                              <span>Volunteers</span>
+                                        </a>
+                                   </li>
+                                    <li>
+                                        <a href="{{ route('admin.contact-submissions.index', ['type' => 'event_reply']) }}">
+                                            <iconify-icon icon="solar:chat-round-line-bold-duotone"></iconify-icon>
+                                            <span>Event Replies</span>
                                         </a>
                                    </li>
                                    <li>
@@ -311,7 +341,7 @@
                               </a>
                          </li>
 
-                         <li class="nav-item">
+                         {{-- <li class="nav-item">
                               <a class="nav-link collapsed" data-bs-target="#roles-nav" data-bs-toggle="collapse" href="#">
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:shield-user-bold-duotone"></iconify-icon>
@@ -332,16 +362,16 @@
                                         </a>
                                    </li>
                               </ul>
-                         </li>
+                         </li> --}}
 
-                         <li class="nav-item">
+                         {{-- <li class="nav-item">
                               <a class="nav-link" href="#">
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:palette-bold-duotone"></iconify-icon>
                                    </span>
                                    <span class="nav-text"> Theme Settings </span>
                               </a>
-                         </li>
+                         </li> --}}
 
                          <li class="nav-item">
                               <a class="nav-link" href="{{ route('admin.settings.index') }}">

@@ -65,10 +65,10 @@ class CategoryController extends Controller
     {
         $request->validate([
             'slug' => 'required|unique:post_categories,slug,' . $category->id . '|max:255',
-            'is_active' => 'boolean',
+            'is_active' => 'nullable',
             'translations' => 'required|array',
             'translations.*.name' => 'required|string|max:255',
-            'translations.*.slug' => 'required|string|max:255',
+            'translations.*.slug' => 'nullable|string|max:255',
         ]);
 
         $category->update([
@@ -87,7 +87,7 @@ class CategoryController extends Controller
                 'language_id' => $languages[$locale]->id,
             ], [
                 'name' => $data['name'],
-                'slug' => Str::slug($data['slug']),
+                'slug' => Str::slug($data['slug'] ?: $data['name']),
                 'description' => $data['description'] ?? null,
             ]);
         }

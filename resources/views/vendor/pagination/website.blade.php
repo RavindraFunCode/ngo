@@ -1,21 +1,18 @@
 @if ($paginator->hasPages())
+    <div class="border-bottom"></div><br>
     <ul class="page_pagination center">
         {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
-            <li class="disabled">
-                <a href="#" class="tran3s"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
-            </li>
+            <li><a href="#" class="tran3s disabled"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>
         @else
-            <li>
-                <a href="{{ $paginator->previousPageUrl() }}" class="tran3s" rel="prev"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
-            </li>
+            <li><a href="{{ $paginator->previousPageUrl() }}" class="tran3s"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>
         @endif
 
         {{-- Pagination Elements --}}
         @foreach ($elements as $element)
             {{-- "Three Dots" Separator --}}
             @if (is_string($element))
-                <li class="disabled"><a href="#" class="tran3s">{{ $element }}</a></li>
+                <li><a href="#" class="tran3s disabled">{{ $element }}</a></li>
             @endif
 
             {{-- Array Of Links --}}
@@ -32,13 +29,9 @@
 
         {{-- Next Page Link --}}
         @if ($paginator->hasMorePages())
-            <li>
-                <a href="{{ $paginator->nextPageUrl() }}" class="tran3s" rel="next"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
-            </li>
+            <li><a href="{{ $paginator->nextPageUrl() }}" class="tran3s"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
         @else
-            <li class="disabled">
-                <a href="#" class="tran3s"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
-            </li>
+            <li><a href="#" class="tran3s disabled"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
         @endif
     </ul>
 @endif

@@ -39,11 +39,13 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('admin.pages.edit', $page) }}" class="btn btn-sm btn-info">Edit</a>
+                                    @if($page->type == 'custom')
                                     <form action="{{ route('admin.pages.destroy', $page) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

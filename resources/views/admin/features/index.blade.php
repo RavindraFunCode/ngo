@@ -29,7 +29,7 @@
                             <tr id="feature-{{ $feature->id }}">
                                 <td>
                                     @if($feature->image)
-                                        <img src="{{ asset('uploads/' . $feature->image) }}" alt="Feature Image" width="50">
+                                        <img src="{{ \Illuminate\Support\Str::startsWith($feature->image, 'website/') ? asset($feature->image) : asset('uploads/' . $feature->image) }}" alt="Feature Image" width="50">
                                     @endif
                                 </td>
                                 <td>{{ $feature->title }}</td>
@@ -69,15 +69,23 @@
                 <form id="featureForm" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="featureId" name="id">
+                    <div class="mb-3 d-none">
+                        <label for="type" class="form-label">Type <span class="text-danger">*</span></label>
+                        <select class="form-control" id="type" name="type" required onchange="updateFormFields()">
+                            <option value="welcome">Welcome Feature</option>
+                            <option value="about_us">About Us</option>
+                            <option value="counter">Counter</option>
+                        </select>
+                    </div>
                     <div class="mb-3">
                         <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="mb-3">
-                        <label for="subtitle" class="form-label">Subtitle</label>
+                        <label for="subtitle" class="form-label" id="subtitleLabel">Subtitle</label>
                         <input type="text" class="form-control" id="subtitle" name="subtitle">
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3" id="descriptionGroup">
                         <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                     </div>
@@ -131,21 +139,39 @@
 
 @push('scripts')
 <script>
+    const assetUrl = "{{ asset('') }}";
     let deleteFeatureId = null;
 
     function resetForm() {
         $('#featureForm')[0].reset();
         $('#featureId').val('');
+        $('#type').val('welcome');
         $('#featureModalLabel').text('Add Feature');
         $('#imagePreview').html('');
         $('#modal-alert-container').html('');
+        updateFormFields();
+    }
+
+    function updateFormFields() {
+        const type = $('#type').val();
+        if (type === 'counter') {
+            $('#subtitleLabel').text('Count Value');
+            $('#descriptionGroup').hide();
+            $('#description').prop('required', false);
+        } else {
+            $('#subtitleLabel').text('Subtitle');
+            $('#descriptionGroup').show();
+            $('#description').prop('required', true);
+        }
     }
 
     function editFeature(id) {
         resetForm();
         $('#featureModalLabel').text('Edit Feature');
-        $.get('/admin/features/' + id + '/edit', function(data) {
+        $.get("{{ route('admin.features.index') }}/" + id + "/edit", function(data) {
             $('#featureId').val(data.id);
+            $('#type').val(data.type || 'welcome');
+            updateFormFields();
             $('#title').val(data.title);
             $('#subtitle').val(data.subtitle);
             $('#description').val(data.description);
@@ -153,7 +179,10 @@
             $('#order').val(data.order);
             $('#is_active').prop('checked', data.is_active);
             if (data.image) {
-                $('#imagePreview').html('<img src="/uploads/' + data.image + '" width="100">');
+                let imgSrc = data.image.startsWith('website/') ? 
+                             assetUrl + data.image : 
+                             assetUrl + "uploads/" + data.image;
+                $('#imagePreview').html('<img src="' + imgSrc + '" width="100">');
             }
             $('#featureModal').modal('show');
         });
@@ -161,7 +190,7 @@
 
     function saveFeature() {
         var id = $('#featureId').val();
-        var url = id ? '/admin/features/' + id : '/admin/features';
+        var url = id ? "{{ route('admin.features.index') }}/" + id : "{{ route('admin.features.store') }}";
         var formData = new FormData($('#featureForm')[0]);
         
         if (id) {
@@ -203,7 +232,7 @@
         if (!deleteFeatureId) return;
 
         $.ajax({
-            url: '/admin/features/' + deleteFeatureId,
+            url: "{{ route('admin.features.index') }}/" + deleteFeatureId,
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',

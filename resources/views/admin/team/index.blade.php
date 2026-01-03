@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 
-@section('title', 'Team Members')
+@section('title', 'Team(Volunteers) Members')
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">Team Members</h4>
+                <h4 class="card-title">Team(Volunteers) Members</h4>
                 <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#teamModal" onclick="resetForm()">Add Member</button>
             </div>
             <div class="card-body">
@@ -19,6 +19,8 @@
                                 <th>Image</th>
                                 <th>Name</th>
                                 <th>Role</th>
+                                <th>Email</th>
+                                <th>Phone</th>
                                 <th>Order</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -29,11 +31,13 @@
                             <tr id="member-{{ $member->id }}">
                                 <td>
                                     @if($member->image)
-                                        <img src="{{ asset('uploads/' . $member->image) }}" alt="Team Image" width="50">
+                                        <img src="{{ \Illuminate\Support\Str::startsWith($member->image, 'website/') ? asset($member->image) : asset('uploads/' . $member->image) }}" alt="Team Image" width="50">
                                     @endif
                                 </td>
                                 <td>{{ $member->name }}</td>
                                 <td>{{ $member->role }}</td>
+                                <td>{{ $member->email }}</td>
+                                <td>{{ $member->phone }}</td>
                                 <td>{{ $member->order }}</td>
                                 <td>
                                     @if($member->is_active)
@@ -77,6 +81,34 @@
                         <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="role" name="role" maxlength="255" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" maxlength="255">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" class="form-control" id="phone" name="phone" maxlength="20">
+                    </div>
+                    
+                    <div class="row">
+                         <div class="col-md-6 mb-3">
+                            <label class="form-label">Facebook URL</label>
+                            <input type="url" class="form-control" name="social_links[facebook]" id="social_facebook">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Twitter URL</label>
+                            <input type="url" class="form-control" name="social_links[twitter]" id="social_twitter">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Google+ URL</label>
+                            <input type="url" class="form-control" name="social_links[google-plus]" id="social_google_plus">
+                        </div>
+                         <div class="col-md-6 mb-3">
+                            <label class="form-label">LinkedIn URL</label>
+                            <input type="url" class="form-control" name="social_links[linkedin]" id="social_linkedin">
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label for="image" class="form-label">Image <span class="text-danger">*</span></label>
                         <input type="file" class="form-control" id="image" name="image">
@@ -138,22 +170,53 @@
         resetForm();
         $('#teamModalLabel').text('Edit Member');
         $('#image').removeAttr('required');
-        $.get('/admin/team/' + id + '/edit', function(data) {
+        $('#image').removeAttr('required');
+        // Construct URL dynamically to handle subdirectories
+        var url = "{{ route('admin.team.edit', ':id') }}";
+        url = url.replace(':id', id);
+        
+        $.get(url, function(data) {
             $('#memberId').val(data.id);
             $('#name').val(data.name);
             $('#role').val(data.role);
+            $('#email').val(data.email);
+            $('#phone').val(data.phone);
+            
+            // Reset social links
+            $('#social_facebook').val('');
+            $('#social_twitter').val('');
+            $('#social_google_plus').val('');
+            $('#social_linkedin').val('');
+
+            if(data.social_links) {
+                let links = typeof data.social_links === 'string' ? JSON.parse(data.social_links) : data.social_links;
+                if(links.facebook) $('#social_facebook').val(links.facebook);
+                if(links.twitter) $('#social_twitter').val(links.twitter);
+                if(links['google-plus']) $('#social_google_plus').val(links['google-plus']);
+                if(links.linkedin) $('#social_linkedin').val(links.linkedin);
+            }
+
             $('#order').val(data.order);
             $('#is_active').prop('checked', data.is_active);
             if (data.image) {
-                $('#imagePreview').html('<img src="/uploads/' + data.image + '" width="100">');
+                let imgSrc = data.image.startsWith('website/') ? 
+                             "{{ asset('') }}" + data.image : 
+                             "{{ asset('uploads/') }}/" + data.image;
+                $('#imagePreview').html('<img src="' + imgSrc + '" width="100">');
             }
             $('#teamModal').modal('show');
+        }).fail(function(xhr) {
+            alert('Error fetching member data: ' + (xhr.responseJSON ? xhr.responseJSON.error : xhr.statusText));
         });
     }
 
     function saveMember() {
         var id = $('#memberId').val();
-        var url = id ? '/admin/team/' + id : '/admin/team';
+        var url = id ? "{{ route('admin.team.update', ':id') }}" : "{{ route('admin.team.store') }}";
+        if (id) {
+            url = url.replace(':id', id);
+        }
+        
         var formData = new FormData($('#teamForm')[0]);
         
         if (id) {
@@ -194,8 +257,11 @@
     function confirmDelete() {
         if (!deleteMemberId) return;
         
+        var url = "{{ route('admin.team.destroy', ':id') }}";
+        url = url.replace(':id', deleteMemberId);
+
         $.ajax({
-            url: '/admin/team/' + deleteMemberId,
+            url: url,
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',

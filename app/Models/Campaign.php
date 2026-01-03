@@ -51,4 +51,32 @@ class Campaign extends Model
     {
         return $this->hasMany(Donation::class);
     }
+
+    public function getRaisedPercentAttribute()
+    {
+        if ($this->target_amount > 0) {
+            return round(($this->raised_amount / $this->target_amount) * 100);
+        }
+        return 0;
+    }
+
+    public function getImageAttribute()
+    {
+        return $this->featured_image;
+    }
+
+    public function getGoalAmountAttribute()
+    {
+        return $this->target_amount;
+    }
+
+    public function getTitleAttribute()
+    {
+        return $this->getTranslation(app()->getLocale())?->title;
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return $this->getTranslation(app()->getLocale())?->short_description ?? $this->getTranslation(app()->getLocale())?->full_description;
+    }
 }

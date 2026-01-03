@@ -8,18 +8,23 @@ use Illuminate\Http\Request;
 
 class FeatureController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $features = Feature::orderBy('order')->get();
+        if ($request->ajax()) {
+            $features = Feature::where('type', 'welcome')->orderBy('order')->get();
+            return response()->json(['data' => $features]);
+        }
+        $features = Feature::where('type', 'welcome')->orderBy('order')->get();
         return view('admin.features.index', compact('features'));
     }
 
     public function store(Request $request)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'type' => 'required|in:welcome,about_us,counter',
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'image' => 'nullable|image',
             'icon' => 'nullable|string|max:255',
             'order' => 'integer|unique:features,order',
@@ -39,17 +44,22 @@ class FeatureController extends Controller
         return response()->json(['success' => 'Feature created successfully.']);
     }
 
-    public function edit(Feature $feature)
+    public function edit($id)
     {
+        $feature = Feature::find($id);
+        if (!$feature) {
+            return response()->json(['error' => 'Feature not found'], 404);
+        }
         return response()->json($feature);
     }
 
     public function update(Request $request, Feature $feature)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'type' => 'required|in:welcome,about_us,counter',
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'image' => 'nullable|image',
             'icon' => 'nullable|string|max:255',
             'order' => 'integer|unique:features,order,' . $feature->id,
